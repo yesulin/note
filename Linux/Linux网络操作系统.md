@@ -376,6 +376,8 @@ Device Boot      Start         End      Blocks   Id  System
 
 #### mount与umount
 
+- 提前是需要完成分区和格式化
+
 - 新建目录 `mkdir /home/yy/test2`
 - 挂载 ` mount /dev/sdb5 /home/yy/test2/`
 - 修改权限 `chown yy.yy test2/`
@@ -414,9 +416,11 @@ Device Boot      Start         End      Blocks   Id  System
 
 6. 创建 /disk2目录 `mkdir /disk2`
 
+7. `chmod 777 /disk2/`
+
 ####  创建quota配额文件
 
-`setenforce 0`
+`setenforce 0`关闭安全机制
 
 `quotacheck -cvug /dev/sdb2 -f -m`
 
@@ -450,6 +454,9 @@ Disk quotas for user yy (uid 500):
 `quotaon -avug`
 
 4. yy用户身份对测试
+5. 将yy的配额复制给user1 `edquota -p yy user1`
+6. 对组建group1配额，useradd -g group1 user4设置用户主组群，用户的主组群必须是group1 `edquota -g group1`
+7. 检查磁盘配额的使用情况`repquota -a`
 
 ### 磁盘配额配置企业案例
 
