@@ -4,7 +4,7 @@
 
 
 
-## 第一章 引言 
+## 第1章 引言 
 
 ### 1.1 C语言的发展过程
 
@@ -122,9 +122,9 @@ int add(int x, int y)
 - 语法分析器
 - 代码生成器
 
+## 第2章 基本的程序语句
 
-
-### **2.2** 基本数据类型及取值范围
+### 2.2 基本数据类型及取值范围
 
 5种基本数据类型：
 
@@ -271,6 +271,24 @@ main(){
 }
 ```
 
+作业：编写程序，输入华氏温度h，输出摄氏温度c。（摄氏温度=5/9*（华氏温度-32）
+
+```c
+/*sy2_2.c*/
+#include<stdio.h>
+int main()
+{
+     float h, c;
+     printf("请输入华氏温度：");
+     scanf("%f",&h);
+     c=5.0/9*(h-32);
+     printf("\n摄氏温度：%f\n",c);
+	 return 0;
+}
+```
+
+
+
 #### 2.4.2关系运算符及关系表达式
 
 `> >= < <=`  高
@@ -367,7 +385,7 @@ void main()
 
 
 
-### **2.5** **标准输入** **/** 输出函数简介
+### 2.5标准输入/ 输出函数简介
 
 #### 2.5.1 scanf函数
 
@@ -380,6 +398,28 @@ scanf(格式控制字符串，变量地址列表)
 printf(格式控制字符串，输出列表)
 
 将输出列表中的各个表达式的值按照格式控制字符串中对应的格式输出到标准输出设备（显示屏）
+
+作业：从键盘输入一个3位正整数，要求输出该数的逆序数。例如输入123，输出321  
+
+```c
+/*sy2_4.c*/
+#include<stdio.h>
+int main()
+{
+  int a,b,c,x,y;
+  printf("请输入一个3位的正整数：\n");
+  scanf("%d",&x);
+  a=x/100;				/*求x的百位数*/
+  b=(x-a*100)/10;		/*求x的十位数*/
+  c=x%10;				/*求x的个位数*/
+  y=c*100+b*10+a;
+  printf("%d: %d\n",x,y);
+  return 0;
+}
+
+```
+
+
 
 #### 2.5.3 getchar函数
 
@@ -400,7 +440,7 @@ main(){
 
 
 
-# 第4章 分支结构
+## 第4章 分支结构
 
 ## 4.1if 结构
 
@@ -478,7 +518,31 @@ main(){
 }
 ```
 
+作业： 输入3个数，找出最小数并输出。 
+
+```c
+/*sy4_1.c*/
+#include<stdio.h>
+int main()
+{
+    int a,b,c,min;
+    printf("input a,b,c:");
+    scanf("%d%d%d",&a,&b,&c);
+    if(a<b)
+        min=a;
+    else 
+        min=b;
+    if(c<min) min=c;
+        printf("The minimum number is %d\n",min);
+    return 0;
+}
+
+```
+
+
+
 ## 4.2 switch结构
+
 例6：某班级准备周末举行一个班级活动，但活动内容要根据表中所示的天气情况来决定：
 
 ```c
@@ -552,9 +616,9 @@ void main()
 
 
 
-## 第五章 循环结构
+## 第5章 循环结构
 
-### for语句
+### 5.1for语句
 
 for语句是一种计数循环。循环次数由循环变量来控制。
 
@@ -615,7 +679,164 @@ main()
 }
 ```
 
-### for语句嵌套
+### 5.2-3while语句与do-while
+
+```c
+#include <stdio.h>
+main(){
+	int sum=0,i=1;
+	while(i<=100) //i=101  
+	{
+		sum=sum+i;
+		i++;
+		printf("%d\n",sum);			
+	}
+}
+```
+
+注意的地方：
+
+1. sum,i要有初始值
+2. i要有增量
+3. 表达式要真
+
+作业1：求5！（要求用while语句）
+
+```c
+#include <stdio.h>
+main(){
+	int sum=1,i=1;
+	while(i<=5) //i=101  
+	{
+		sum=sum*i;
+		i++;
+		printf("%d\n",sum);			
+	}
+}
+```
+
+例【5-7】编写程序，统计从键盘输入的字符个数（回车换行符也是一个字符），当遇到结束标志时程序结束。
+
+分析：关键是循环计数。
+
+ 设置一个累加器count（初值为0），每次从键盘输入一个字符，只要该字符的值不等于结束标志，累加器的值就增1：count=count+1；
+
+```c
+/*example5_7.c 统计从键盘输入的字符个数*/
+#include <stdio.h>
+void main()
+{
+	char ch;
+	unsigned count=0; //无符号整型，只能正数 
+	printf("please enter your words:\n");
+	while((ch=getchar())!=EOF) //当有EOF结束标志符 ，回车符算一个字符 
+		count=count+1;          //\n字符串结束标志符 ，回车符不算一个字符 
+	printf("count=%u\n",count); //!，回车符不算一个字符 
+}
+
+```
+
+题目：while和do-while两者的区别？当i=11时，分别的sum是多少？
+
+```c
+#include <stdio.h>
+main()
+{
+	int sum=0,i=1;
+	while(i<=10)
+	{
+		sum=sum+i;
+		i++;
+	}
+	printf("%d\n",sum);//0
+}
+```
+
+```c
+#include <stdio.h>
+main()
+{
+	int sum=0,i=1;	
+	do
+	{
+		sum=sum+i;
+		i++;		
+	}while(i<=10);	
+	printf("%d\n",sum);//
+}
+```
+
+作业：水仙花数
+
+```c
+/*5.3.2  用while循环语句实现循环*/ 
+/*实验练习2　求水仙花数*/ 
+
+#include <stdio.h>
+main ( )
+{ 
+       int x, y, z;
+       int k=100;
+      while(k<=999);           /* while循环条件，水仙花数是一个3位数*/
+       {
+          x=k/100;
+          y=(k/10)%10;
+          z=k%10;
+          if (k==x*x*x+y*y*y+z*z*z)          /*水仙花数应当满足的条件*/
+             printf("%d\n", k);
+          k++;
+       }
+}
+```
+
+
+
+### 5.4break和continue语句
+
+break使程序运行时中途退出switch结构或者一个循环体。
+
+作业：编写程序实现，输入一个整数判断此数是否为素数。
+
+```c
+#include <stdio.h>
+main(){
+	int i,m;
+	scanf("%d",&m);
+	for(i=2;i<=m-1;i++)
+	{
+		if(m%i==0)
+			break;//跳当前循环 
+	}
+	
+	if(i<=m-1)
+		printf("该数不是素数!\n");
+	else
+		printf("该数是素数!\n");
+}
+```
+作业：输出10-100的全部素数。
+
+```c
+#include <stdio.h>
+main(){
+	int i,j;
+	for(i=11;i<=100;i+=2)
+	{
+		for(j=2;j<=i-1;j++)			
+			if(i%j==0)
+				break;			
+			
+			if(j>=i)
+			{
+				printf("%4d",i);				
+			}		
+	}
+}
+```
+
+
+
+### 5.5for语句嵌套
 
 例3：编写程序，从键盘输入*m*和*n*的值，用符号“*”在屏幕上打印出如下所示具有*m*行*n*列的矩形图案。
 
@@ -718,46 +939,3 @@ main(){
 	printf("%d",sum); 
 }
 ```
-
-### while语句
-
-```c
-#include <stdio.h>
-main(){
-	int sum=0,i=1;
-	while(i<=100) //i=101  
-	{
-		sum=sum+i;
-		i++;
-		printf("%d\n",sum);			
-	}
-}
-```
-
-注意的地方：
-
-1. sum,i要有初始值
-2. i要有增量
-3. 表达式要真
-
-作业1：求5！（要求用while语句）
-
-```c
-#include <stdio.h>
-main(){
-	int sum=1,i=1;
-	while(i<=5) //i=101  
-	{
-		sum=sum*i;
-		i++;
-		printf("%d\n",sum);			
-	}
-}
-```
-
-例【5-7】编写程序，统计从键盘输入的字符个数（回车换行符也是一个字符），当遇到结束标志时程序结束。
-
-分析：关键是循环计数。
-
- 设置一个累加器count（初值为0），每次从键盘输入一个字符，只要该字符的值不等于结束标志，累加器的值就增1：count=count+1；
-
