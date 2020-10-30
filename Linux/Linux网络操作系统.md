@@ -544,6 +544,8 @@ Time units may be: days, hours, minutes, or seconds
 
 ### 在linux中配置软RAID
 
+RAID（Redundant Array of Inexpensive Disks，独立磁盘冗余阵列）用于将多个廉价的小型磁盘驱动器合并成一个磁盘阵列，以提高存储性能和容错功能。**RAID可分为软RAID和硬RAID**。
+
 RAID5：向阵列中的磁盘写数据，奇偶校验数据存放在阵列中的各个盘上，允许单个磁盘出错
 
 #### 创建与挂载RAID设备
@@ -586,7 +588,7 @@ df
 
 - 移除失效的RAID成员
 
-`mdadm /dev/md0 --remove !`
+`mdadm /dev/md0 --remove /dev/sdc1`
 
 - 添加一个新的RAID成员
 
@@ -750,6 +752,42 @@ LVM流程：物理卷->卷组->逻辑卷
 **挂载之前先格式化设备**
 
 `mount /dev/vg0/lv0 /media/lv0/`
+
+## 期中复习
+
+1. 新建与安装Linux操作系统.(见书本p11)
+2. 管理用户和组
+
+- `useradd -d /home/user02 user02`
+- `tail -3 /etc/passwd`
+- `passwd user02`
+- `groupadd group1`
+- `gpasswd -a user02 group1`
+- `tail -3 /etc/group`
+
+3. 管理文件系统
+
+- `su user01`
+- `mkdir test;cd test`
+- `touch file1;ll`
+- `chmod o+w file1;ll ` 或 `chmod 666 file1;ll`
+- `chmod g-r file1;ll`
+- `chmod 755 file1;ll `
+
+4. 管理磁盘
+
+- `fdisk /dev/sdb`
+- `n->p->1->回车->+500M`
+- `n->e->2->回车->+10G`
+- `n->l->回车->+500M`
+- `w`
+- `mkfs -t vfat -V -c /dev/sdb1`
+- `mkfs -t ext3 -V -c /dev/sdb5`
+- `fsck -a /dev/sdb1`
+- `fsck -a /dev/sdb5`
+- `mkdir /mnt/vfat;mkdir /mnt/ext3`
+- `mount /dev/sdb1 /mnt/vfat/`
+- `mount /dev/sdb5 /mnt/ext3/`
 
 ## 管理Linux服务器的网络配置
 

@@ -73,16 +73,16 @@ void main(){
 ```c
 /* example1_3 两数相加的加法器*/
 #include<stdio.h>
-int add(int x, int y);
+int add(int x, int y); //函数声明
 void main()
 { 
 	int a, b, c;
 	printf ("please input value of a and b:\n");
 	scanf("%d %d", &a, &b);
-	c=add(a,b);
+	c=add(a,b); //函数的调用
 	printf ("max=%d\n",c);
 }
-int add(int x, int y)
+int add(int x, int y) //自定义函数
 {
 	return(x+y);
 }
@@ -793,6 +793,8 @@ main ( )
 
 ### 5.4break和continue语句
 
+break语句
+
 break使程序运行时中途退出switch结构或者一个循环体。
 
 作业：编写程序实现，输入一个整数判断此数是否为素数。
@@ -830,6 +832,73 @@ main(){
 			{
 				printf("%4d",i);				
 			}		
+	}
+}
+```
+
+continue语句
+
+结束本次循环，跳过continue语句下面未执行的语句，继续进行下一次循环。
+
+例：当跑到第3圈的时候,剩下部分不用跑,继续从第4圈开始跑 . 
+
+```c
+#include <stdio.h>
+main(){
+	int i;
+	for(i=1;i<=10;i++)
+	{
+		if(i==3)
+			continue; //break;
+			printf("现在跑第%d圈\n",i);
+			
+	}	
+}
+```
+
+作业：编写程序实现，输出100～200之间不能被3整除的数。（要用continue语句）
+
+算法：
+
+1. 循环100-200（for,while)
+2. 判断i除以3不等0，输出i
+3. 否则跳过，继续下一轮判断
+
+```c
+//方法1
+#include<stdio.h>
+main()
+{
+	int x;
+	for(x=100;x<=200;x++)
+	{
+		if(x%3!=0)
+		printf("%d\n",x);
+	}
+}
+//方法2
+#include<stdio.h>
+main()
+{
+	int x;
+	for(x=100;x<=200;x++)
+	{
+		if(x%3==0)
+		continue;		
+		printf("%d\n",x);
+	}
+}
+//方法3
+#include<stdio.h>
+void main()
+{
+	int x=99; //x=100;
+	while(x<=200)
+	{
+		++x; //x++;
+		if(x%3==0)
+			continue;
+		printf("x=%d\n",x);		
 	}
 }
 ```
@@ -939,3 +1008,256 @@ main(){
 	printf("%d",sum); 
 }
 ```
+
+##　第６章　函数与宏定义
+
+###　6.1函数的概念
+
+C语言的函数分为两类：
+
+1. 标准函数，又称为库函数。
+2. 自定义函数 (C语言的核心)
+
+```
+自定义函数的形式：
+[存储类型符] [返回值类型符]  函数名([形参说明表])
+{
+     <函数语句体> 
+}
+```
+
+几点说明：
+
+1. [存储类型符]指的是函数的作用范围，只有两种形式：static和extern。
+
+   static说明的函数称为内部函数，只能作用于其所在的源文件，
+
+   extern说明的函数称为外部函数，可被其他源文件中的函数调用。
+
+   缺省情况为extern
+
+2. [返回值类型符]指的是函数体语句执行完成后，函数返回值的类型。
+
+   如int，float，char等。
+
+   若函数无返回值，则用空类型void来定义函数的返回值。
+
+   默认情况为int型（有些编译器不支持默认情况）。
+
+3. 函数名由任何合法的标识符构成。
+
+4. [形参说明表]是一系列用逗号分开的形参变量说明。
+
+    如：int x, int y, int z
+
+5. 函数语句体是放在一对花括号{ }中，由局部数据类型描述和功能实现两部分组成。
+
+例：设计一个加法器
+
+```c 
+//自定义函数方法1
+#include <stdio.h>
+int add(int x,int y);//函数声明 
+main(){
+	int a,b,c;
+	scanf("%d %d",&a,&b);
+	c=add(a,b);//调用函数，实参 
+	printf("c=%d",c);
+}
+
+int add(int x,int y){ //自定义函数，形参 
+	return x+y;		
+    
+//自定义函数方法2
+#include <stdio.h>
+int add(int x,int y){ //自定义函数，形参 
+	return x+y;		
+}
+main(){
+	int a,b,c;
+	scanf("%d %d",&a,&b);
+	c=add(a,b);//调用函数，实参 
+	printf("c=%d",c);
+} 
+```
+
+例如，编写自定义函数abs_sum()，求两个任意整数的绝对值的和。
+
+```c
+/*example6_1.c 自定义函数，求两整数绝对值的和*/
+#include <stdio.h>
+int abs_sum(int m,int n);  /*函数声明，求m和n的绝对值之和*/
+void main()
+{
+	int x,y,z;
+	scanf("%d%d",&x,&y);
+	z=abs_sum(x,y);      /*函数调用*/  
+	printf("|%d|+|%d|=%d\n",x,y,z);
+}
+
+int abs_sum(int m,int n)   /*函数定义*/
+{
+	if(m<0)
+		m=-m;
+	if(n<0)
+		n=-n;
+	return m+n;
+}
+
+//
+/*example6_1a.c 自定义函数，求两整数绝对值的和*/
+#include <stdio.h>
+int abs_sum(int m,int n)   /*函数定义*/
+{
+	if(m<0)
+		m=-m;
+	if(n<0)
+		n=-n;
+	return m+n;
+}
+void main()
+{
+	int x,y,z;
+	scanf("%d%d",&x,&y);
+	z=abs_sum(x,y);      /*函数调用*/
+	printf("|%d|+|%d|=%d\n",x,y,z);
+}
+```
+
+函数先后关系：
+
+- 这样把abs_sum写在上面，是因为C的编译器是自上而下顺序分析代码。
+- 当abs_sum写在上面的时候，编译器就知道需要几个参数，参数类型
+- 当abs_sum写在下面的时候，代码前面需要函数(原型)声明
+
+函数(原型)声明：
+
+- 函数头，以分号‘;’
+- 函数声明的目的告诉编译器自定义函数长什么样子，包括名称，参数，返回类型
+
+作业：求和,1到10，20到30，35到45他们的和。
+
+> 代码复制：是程序质量不良的表现
+
+```c
+#include <stdio.h>
+void sum(int begin,int end); //函数原型声明 
+main(){
+	sum(1,10); //函数调用，实参 
+	sum(20,30);
+	sum(35,45);
+	
+}
+void sum(int begin,int end) //自定义函数，形参 
+{
+	int i,sum=0;
+	for(i=begin;i<=end;i++)
+	{
+		sum+=i;
+	}
+	printf("sum=%d\n",sum);
+}
+
+```
+
+#### 函数的定义类型
+
+- 无返回值无参数
+
+```c
+void Hello( )            //自定义函数
+{ 
+     printf ("Hello world!\n"); 
+} 
+main()                     //主函数
+{
+	Hello();
+}
+
+```
+
+- 无返回值有参数
+
+```c
+void sum(int a,int b)   //自定义函数
+{
+      int s;
+      s=a+b;
+      printf("s=%d\n",s);
+} 
+main()                      //主函数
+{
+        int x=2,y=3;
+        sum(x,y);
+}
+
+```
+
+- 有返回值无参数
+
+``` c
+int sum()                  //自定义函数
+{
+      int a,b,s;
+      scanf("%d%d",&a,&b);
+      s=a+b;
+      return s;
+} 
+main()                       //主函数
+{
+        int s;
+        s=sum();
+        printf("s=%d\n",s);
+}
+
+```
+
+- 有返回值有参数
+
+```c
+int sum(int a,int b )    //自定义函数
+{
+      int s;
+      s=a+b;
+      return s;
+} 
+main()                       //主函数
+{
+        int x,y,s;
+        scanf("%d%d",&x,&y);
+        s=sum(x,y);
+        printf("s=%d\n",s);
+}
+
+```
+
+#### 函数的嵌套调用
+
+函数嵌套就是**函数调用其它函数**
+
+例：利用函数嵌套实现程序设计，求1！+2！+…+5！
+
+```c
+#include <stdio.h>
+int fact(int n){
+	int f=1,i;
+	for(i=1;i<=n;i++)
+		f=f*i;
+	return f;
+}
+int sum(int h){
+	int i,s=0;
+	for(i=1;i<=h;i++)
+		s=s+fact(i); //调用fact求阶乘 
+	return s;
+
+}
+main(){
+	int s;
+	s=sum(5);
+	printf("s=%d\n",s);	
+}
+
+```
+
+#### 函数的递归调用
