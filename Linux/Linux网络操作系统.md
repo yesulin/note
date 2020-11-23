@@ -610,7 +610,7 @@ df
 /dev/sdb2              66         130      522112+  8e  Linux LVM
 ```
 
-LVM流程：物理卷->卷组->逻辑卷
+LVM流程：pv物理卷->vg卷组->lv逻辑卷
 
 #### 建立物理卷
 
@@ -725,7 +725,9 @@ LVM流程：物理卷->卷组->逻辑卷
 
 `lvreduce -L -5M /dev/vg0/lv0`
 
-#### 删除逻辑卷->卷组->物理卷
+#### 删除逻辑卷\卷组\物理卷
+
+删除流程：lv逻辑卷->vg卷组->pv物理卷
 
 如果有挂载的请先卸载
 
@@ -805,7 +807,7 @@ LVM流程：物理卷->卷组->逻辑卷
   - `hostname yesulin` 重启后失效
   - `vim /etc/sysconfig/network` 永久保存
 
-  ```
+  ```bash
   NETWORKING=yes
   HOSTNAME=yesulin
   ```
@@ -841,7 +843,7 @@ LVM流程：物理卷->卷组->逻辑卷
 
 `vim /etc/sysconfig/network-scripts/ifcfg-eth0 `
 
-```
+```bash
 DEVICE=eth0
 ONBOOT=yes
 BOOTPROTO=static
@@ -850,6 +852,27 @@ NETMASK=255.255.225.0
 DNS1=192.168.1.100
 GATEWAY=192.168.1.254
 ```
+
+案例：为上述eth0网卡再绑定一个IP地址192.168.1.3
+
+`cd /etc/sysconfig/network-scripts/`
+
+`cp ifcfg-eth0 ifcfg-eth0:1`
+
+`vim ifcfg-eth0:1`
+
+```bash
+DEVICE=eth0:1
+ONBOOT=yes
+BOOTPROTO=static
+IPADDR=192.168.1.3
+NETMASK=255.255.255.0
+DNS1=192.168.1.100
+GATEWAY=192.168.1.254
+HWADDR=00:0C:29:20:31:8B
+```
+
+注意：学生机如果出现错误可以尝试删除所有网上，uuidgen eth0,接着重新编辑配置文件
 
 - 使用setup命令
 - 使用service
