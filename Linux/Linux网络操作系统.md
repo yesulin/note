@@ -896,10 +896,15 @@ HWADDR=00:0C:29:20:31:8B
 
 - 编辑模式
   - h j k l 移动 
-  - dd 删除
+  - dd 删除（剪切）
   - yy 复制
   - p 粘贴
   - ctrl+f,ctrl+b 翻页
+  - x （del）X 回格
+  - G 最后一行  gg首行
+  - u 撤消
+  - ctrl+r 重做
+  - /  查找 n往下查找 N往上查找
 - 插入模式 i
 - 命令模式 Esc->shift+:
   - :w 保存
@@ -907,7 +912,8 @@ HWADDR=00:0C:29:20:31:8B
   - :wq 保存并退出
   - :q 退出
   - :q! 强制退出
-  - :/查找
+  
+  课堂练习：p140子任务4
 
 ### 正则表达式
 
@@ -917,7 +923,7 @@ HWADDR=00:0C:29:20:31:8B
 
 `grep -in 'the' httpd.conf ` 查找包含the的行 ,忽略大小写
 
-` grep -n 'oo' httpd.conf ` 查找包含oo的行
+` grep -n 'oo' httpd.conf ` 查找所有包含oo的行
 
 `grep -n '[^R]oo' httpd.conf` 查找包含oo的行,并且排除R开头
 
@@ -927,7 +933,7 @@ HWADDR=00:0C:29:20:31:8B
 
 ## 学习shell script
 
-数组,循环,条件
+支持数组,循环,条件与逻辑判断
 
 ```shell
 #!/bin/bash
@@ -936,7 +942,7 @@ exit 0
 
 ```
 
-
+sh  ./hello.sh
 
 ```shell
 #!/bin/bash
@@ -971,6 +977,8 @@ gpgcheck=0
 enabled=1            
 ```
 
+cd /etc/yum.repos.d/  ，删除CentOS-Base.repo
+
 >  测试安装是否成功
 
 >  `yum list`
@@ -983,10 +991,11 @@ enabled=1
 
 ### 程序：打印Hello World
 
-```
+```c
 #include <stdio.h>
 int main(){
-        printf("hello world\n");
+	printf("hello world\n");
+	return 0;
 }
 ```
 
@@ -1054,13 +1063,13 @@ int main(){
 
 方法1
 
-`smbclient -L 172.16.128.193`
+`smbclient -L 目标ip地址`   不需要输入密码，直接回车
 
 方法2
 
 `mkdir -p /mnt/sambadata`
 
-`mount -t cifs //172.16.128.193/public /mnt/sambadata/`
+`mount -t cifs //目标ip地址/public /mnt/sambadata/`  不需要输入密码，直接回车
 
 
 

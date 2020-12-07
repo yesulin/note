@@ -1,3 +1,5 @@
+
+
 # C语言程序设计
 
 [toc]
@@ -1552,6 +1554,22 @@ a[0]>a[0+1]    a[1]>a[2]      a[2]>a[3]
 
 第3轮 i=2
 
+j=0                    1
+
+a[0]>a[0+1]    a[1]>a[2]
+
+150,160,120,170,180
+
+150,120,160,170,180
+
+第4轮 i=3
+
+j=0
+
+a[0]>a[0+1]
+
+120,150,160,170,180
+
 
 
 ```c
@@ -1571,5 +1589,461 @@ main(){
 	for(i=0;i<=4;i++) 
         printf("%d ",a[i]);
 }  
+```
+
+#### 字符数组
+
+定义：其数组元素的数据类型为字符型变量，关键字为char。
+
+char 数组名[长度]； 
+char  ch[5];
+
+初始化：
+
+1. char ch[5]={‘h’,‘e’,‘l’,'l','o'}; 
+2. 字符数组的长度也可以省略不写  `char ch[]={‘h’,‘e’,‘l’,'l','o'};`
+3. 字符数组中部分元素初始化，其中ch[4]的初值为‘\0’ `char ch[5]={‘h’,‘e’,‘l’,'l'};`
+
+引用：
+
+ch[2]=ch[3];
+
+#### 字符串
+
+定义：字符串一般使用字符数组来处理，字符串的结束标志’\0’也要存放在该字符数组中。
+
+char ch[6]={‘h’,‘e’,‘l’，‘l’，‘o’，‘\0’ }; 
+
+char ch[6]=“hello”; 同上面赋值方法等价，系统自动在末尾加‘ \0‘
+
+常见的函数：
+
+1. 输出函数  `	puts(ch);`  也可以通过for语句输出
+2. 输入函数 gets(ch);
+3. 连接函数 strcat(a,b);   注意导入#include<string.h>
+4. 字符串复制函数strcpy(a,b) ;
+5. 字符串比较函数strcmp(a,b); 
+6. 求字符串长度函数strlen(a); 不包括字符串结束的标志’\0’   
+7. 大写字母转换小写字母函数strlwr();
+8. 小写字母转换大写字母函数strupr();
+
+#### 二维数组
+
+`数据类型说明符 数组名[常量表达式1][常量表达式2]; `
+
+`int a[2][3]`
+
+说明：
+
+1. 二维数组中的每个元素都有2个下标，都必须分别放在单独的方括号内。 
+2. 二维数组定义中常量表达式1表示该数组具有的行数，常量表达式2表示该数组具有的列数；两个数字的乘积是该数组的元素的个数。 
+3. 二维数组的存放规律是**按行存储的**。 `int b[2][3]; 存储过程：a[0][0]→a[0][1]→a[0][2]→a[1][0]→a[1][1]→a[1][2]`
+
+初始化：
+
+1. 按行给二维数组所有元素初始化。`int b[3][2]={{1,6},{2,5},{3,4}}; `
+2. 按存储顺序给二维数组所有元素初始化 `int d[4][3]={1,2,3,4,5,6,7,8,9,10,11,12};  `
+3. 二维数组第1维长度可以省略。 `int array[][3]={1,3,9,2,4,6,5,7,8};  `
+4. 对部分元素赋初值 `int array[2][3]={1,3,9}; `
+
+引用：
+
+数组名[下标] [下标]
+
+实例：
+
+打印出以下的杨辉三角形（要求打印出10行）;
+
+```
+杨辉三角形：
+     1
+     1     1
+     1     2     1
+     1     3     3     1
+     1     4     6     4     1
+     1     5    10    10     5     1
+     1     6    15    20    15     6     1
+     1     7    21    35    35    21     7     1
+     1     8    28    56    70    56    28     8     1
+     1     9    36    84   126   126    84    36     9     1
+```
+
+第一行
+
+i=0   j=0
+
+`a[0][0]=1`
+
+第二行
+
+i=1 j=0 1
+
+`a[1][0]=1,a[1][1]=1`
+
+第三行
+
+i=2  j= 0 1 2
+
+`a[2][0]=1,a[2][1]=a[1][0]+a[1][1]=2,a[2][2]=1`
+
+其它略
+
+```c
+#include <stdio.h>
+#define M 10
+main()
+{
+	int a[M][M],i,j;
+	for(i=0;i<M;i++)
+		for(j=0;j<=i;j++)
+		{
+			if(j==0 || i==j)
+				a[i][j]=1;
+			else
+				a[i][j]=a[i-1][j-1]+a[i-1][j];
+		}			
+	printf("杨辉三角形：\n");
+	for(i=0;i<M;i++)
+	{
+		for(j=0;j<=i;j++)
+			printf("%6d",a[i][j]);
+		printf("\n");
+	}
+}
+```
+
+作业：利用数组计算斐波那契数列的前10个数，即1，1，2，3，5，8，13，21，34，55
+
+算法：
+1.  int fib[10]={1,1}
+2. 通过循环生成剩余的8个数  fib[i]=fib[i-1]+fib[i-2]
+3. 最后输出
+
+
+
+## 指针
+
+指针就是保存地址的变量
+
+### 相关知识
+
+获取变量空间大小sizeof
+
+```c
+#include<stdio.h>
+int main(){
+	int a;
+	a=6;
+	printf("sizeof(int)=%ld\n",sizeof(int));
+	printf("sizeof(a)=%ld\n",sizeof(a));
+	printf("sizeof(double)=%ld\n",sizeof(double));
+}
+```
+
+
+
+打印地址
+
+```c
+#include<stdio.h>
+int main(){
+	int a=0;
+	printf("0x%x\n",&a);
+	printf("%p\n",&a);
+}
+```
+
+打印相邻的两个地址
+
+```c 
+#include<stdio.h>
+int main(){
+	int i=0;
+	int p;
+	printf("%p\n",&i); //十六进制 
+	printf("%p\n",&p);
+}
+```
+
+数组的地址
+
+```c
+#include<stdio.h>
+int main(){
+	int a[10];
+	printf("%p\n",&a);
+	printf("%p\n",a);
+	printf("%p\n",&a[0]);
+	printf("%p\n",&a[1]);
+}
+```
+
+### 指针的定义
+
+```c
+int *p;
+```
+
+### 指针的赋初值
+
+```c
+#include<stdio.h>
+int main(){
+ 	int a=3,b=7,*p,*q;
+ 	p=&a; //p-->a
+	q=&b; //q-->b	
+	char a1='b',*p1=&a1; //p-->a
+	printf(" a=%p\n",&a);
+	printf("*p=%p\n",p);
+}
+```
+
+### 引用
+
+```
+#include<stdio.h>
+int main(){
+	int a=7,b=9,*p;
+	p=&a;
+	*p=*p+b;
+	printf("%d,%d\n",a,*p);
+}
+ 	
+```
+
+例：采用指针变量对两个整数进行从小到大排序
+
+````c
+#include <stdio.h>
+main()
+{
+	int a,b,*t,*p,*q;
+	p=&a;
+	q=&b;
+	printf("请输入两个整数：");
+//	scanf("%d%d",p,q); //等价写法 
+	scanf("%d%d",&a,&b); //7 3 
+	if(*p>*q) //*p 指针变量所指向变量的值 
+	{
+		t=p; //t p 是存放地址 
+		p=q;
+		q=t;
+	}
+	printf("两个整数从小到大排序为：%d，%d\n",*p,*q);
+}
+````
+
+### 指针变量指向一维数组
+
+```c
+#include <stdio.h>
+main()
+{
+	int a[5],*p;
+	p=&a[0];
+}
+```
+
+### 指针变量指向一维数组的引用
+
+```c
+#include <stdio.h>
+main()
+{
+	int a[5],*p;
+	p=&a[0];
+}
+/* 引用地址
+下标法           地址法     指针法 
+ &a[0]            a+i        p+i
+   引用数值 
+  a[0]            *(a+i)    *(p+i)
+*/ 
+```
+
+### 指针的移动
+
+```c
+#include <stdio.h>
+main()
+{
+	int a[10]={5,2,0,1,3},*p;
+	p=a; //等价p=&a[0]
+	printf("%d\t",*p);
+	printf("%p\n",p);
+	p=p+2;
+	printf("%d\t",*p);
+	printf("%p\n",p);
+	p++;
+	printf("%d\t",*p);
+	printf("%p\n",p);
+	++p;
+	printf("%d\t",*p);
+	printf("%p\n",p);
+
+}
+```
+
+```c
+#include <stdio.h>
+main()
+{
+	int a[10]={5,2,0,1,3},*p;
+	p=a; //等价p=&a[0]
+	printf("%d\t",*p);
+	printf("%p\n",p);
+	p=p+2;
+	printf("%d\t",*p);
+	printf("%p\n",p);
+//	p++;
+//	printf("%d\t",*p);
+	printf("%p\n",p++); //先打印地址，再地址加4个字节
+	
+//	++p;
+//	printf("%d\t",*p);
+	printf("%p\n",++p);//先加四个字节地址，再打印地址。总共移动了8个字节。
+
+}
+```
+
+### 字符指针
+
+```c
+#include<stdio.h>
+main(){
+	char *p="l love china!";
+	printf("%s\n",p);
+	printf("%s\n",p+7);	
+}
+```
+
+例：用字符指针实现求字符串长度
+
+    ```c
+#include<stdio.h>
+main(){
+	char str[100],*p;
+	int k=0;
+	p=str;
+	printf("请输入一个字符串：");
+	gets(p);
+	for(;*p!='\0';p++)
+	     k++;
+	printf("该字符串的长度为%d\n",k);
+	
+}
+    ```
+
+### 指针作为函数参数 
+
+例：定义一个函数，用指针对两个数进行从小到大排序
+
+```c
+#include <stdio.h>
+
+void exchange(int *p,int *q);//指针作为参数列表 
+
+main()
+{
+	int a,b;
+	printf("请输入两个数："); 
+	scanf("%d%d",&a,&b);
+	if(a>b)
+		exchange(&a,&b); //调用时需要& 
+	printf("排序结果为：%d，%d\n",a,b);	
+}
+
+void exchange(int *p,int *q){
+	int t;
+	t=*p;
+	*p=*q;
+	*q=t;
+}
+```
+
+例：
+
+```c
+#include<stdio.h>
+void f(int *p);
+void g(int k);
+int main(){
+	int i=6;
+	printf("&i=%p\n",&i);
+	f(&i); //按地址 
+	g(i); // 按数值 
+	return 0;
+}
+
+void f(int *p)
+{
+	printf("p=%p\n",p);//地址 
+	printf("*p=%d\n",*p); //值
+	*p=26; //*p就等于i，*是一个单目运算符，用来访问指针的值所表示的地址上的变量
+}
+
+void g(int k)
+{
+	printf("k=%d\n",k);
+}
+```
+
+### 指向数组的指针作为函数的参数
+
+例：定义一个函数，用指针实现数组元素从小到大排序。 
+
+```c
+#include <stdio.h>
+
+void sort(int *p,int n);
+
+main()
+{
+	int a[10],i;
+	for(i=0;i<5;i++)
+		scanf("%d",&a[i]);
+	sort(a,5);
+	for(i=0;i<5;i++)
+		printf("%4d",a[i]);
+}
+
+void sort(int *p,int n){
+	int i,j,t;
+	for(i=0;i<n-1;i++)
+		for(j=0;j<n-1-i;j++)
+			if(p[j]>p[j+1])
+				{
+					t=p[j];
+					p[j]=p[j+1];
+					p[j+1]=t;
+				}
+}
+```
+
+### 指向字符串的指针作为函数的参数
+
+例：定义一个函数，用指针将一个字符串复制到另外一个字符串中。
+
+```c
+#include <stdio.h>
+
+void StringCopy(char *p,char *q);
+
+main()
+{
+	char a[20],b[20];
+	printf("请输入一个字符串：");
+	gets(b);
+	StringCopy(a,b);
+	printf("数组a为：%s\n",a);
+}
+
+void StringCopy(char *p,char *q){
+	for(;*q!='\0';q++,p++)
+		*p=*q;
+	*p='\0';
+	
+		
+}
 ```
 
