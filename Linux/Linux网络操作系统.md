@@ -1126,7 +1126,7 @@ smbpasswd -a test1`
 
 `vim /etc/dhcp/dhcpd.conf`
 
-```
+```bash
 ddns-update-style none;
 log-facility local7;
 subnet 192.168.1.0 netmask 255.255.255.0{
@@ -1146,7 +1146,7 @@ subnet 192.168.1.0 netmask 255.255.255.0{
 
 保留地址配置应用
 
-```
+```bash
 host CTO{
         hardware ethernet 00:0C:29:23:AC:AB;
         fixed-address 192.168.1.150;
@@ -1155,9 +1155,7 @@ host CTO{
 
 错误解决办法
 
-查找错误命令
-
-`dhcpd`
+查找错误命令 `dhcpd`
 
 ```
 编辑 /etc/rc.d/init.d/dhcpd 文件，将其中的
@@ -1200,9 +1198,11 @@ service network restart 重启网卡
 
 ### named.conf全局配置文件
 
+需要启动named服务才能出来全局配置文件
+
 > `vim /var/named/chroot/etc/named.conf`
 
-```
+```bash
 options {
         listen-on port 53 { any; };
         listen-on-v6 port 53 { ::1; };
@@ -1247,7 +1247,7 @@ include "/etc/named.root.key";
 
 > `vim /var/named/chroot/etc/named.zones`
 
-```
+```bash
 zone "long.com" IN{
         type master;
         file "long.com.zone";
@@ -1263,7 +1263,7 @@ zone "168.192.in-addr.arpa" IN{
 
 ### 创建long.com.zone正向区域文件
 
-更换路径
+**请注意更换路径**
 
 `cd /var/named/chroot/var/named/`
 
@@ -1273,7 +1273,7 @@ zone "168.192.in-addr.arpa" IN{
 
 `vim /var/named/chroot/var/named/long.com.zone`
 
-```
+```bash
 $TTL 1D
 @       IN SOA  @ rname.invalid. (
                                         0       ; serial
@@ -1303,7 +1303,7 @@ web     IN      CNAME   www.long.com.
 
 `vim /var/named/chroot/var/named/192.168.zone `
 
-```
+```bash
 $TTL 1D
 @       IN SOA  @ rname.invalid. (
                                         0       ; serial
@@ -1324,6 +1324,21 @@ $TTL 1D
 22.10   IN      PTR     stu.long.com.
 
 ```
+
+### 配置linux客户端和测试
+
+`vim /etc/resolv.conf ` 配置客户端DNS服务的IP地址
+
+```bash
+search long.com
+nameserver 192.168.1.1                      
+```
+
+测试命令
+
+1. nslookup命令
+2. dig www.long.com
+3. host www.long.com
 
 ## 配置与管理Apache服务器
 

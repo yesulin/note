@@ -2047,3 +2047,674 @@ void StringCopy(char *p,char *q){
 }
 ```
 
+## 构造类型
+
+###  结构体类型定义
+
+struct 结构体名 
+
+ { 
+
+   数据类型1 成员列表1； 
+
+   数据类型2 成员列表2； 
+
+​     … 
+
+   数据类型n 成员列表n； 
+
+ }； 
+
+注意说明：
+
+
+
+```c
+#include <stdio.h>
+main(){
+	//结构体类型定义 
+	struct  student{
+		 int number；
+	     char name[8]； 
+	     char sex； 
+	     int age；
+	     float c_program
+	};	
+}
+```
+
+
+
+## 结构体变量定义
+
+1. 先定义结构体类型，再定义结构体变量一般形式如下：
+
+`struct student st1,st2;//st1,st2变量的定义`
+
+2. 定义结构体类型的同时定义结构体变量
+
+```c
+	struct  student{ //student结构体名称 
+		 int number；
+	     char name[8]； 
+	     char sex； 
+	     int age；
+	     float c_program
+	}st1,st2;
+```
+
+3. 使用结构体变量定义结构体
+
+```c
+#include <stdio.h>
+main(){
+struct date 
+{ 
+	int month; 
+	int day; 
+	int year; 
+}; 
+    
+struct student
+{ 
+   int number;
+   char name[8]; 
+   char sex; 
+   int age;
+   struct date birthday;
+}st1,st2;
+
+}
+```
+
+###  变量引用  
+
+1.  定义结构体类型同时定义结构体变量时，给结构体变量st1、st2赋初值
+
+```c
+#include <stdio.h>
+main(){
+	struct student{
+		int number;
+		char name[8];
+		char sex;
+		int age;
+		float c_program;
+	}st1={35013101,"王 迪",'F',20,90},st2={35013112,"杨 光",'M',19,80};
+}
+```
+
+2. 先定义结构体类型struct student，再定义结构体变量st1、st2，然后赋初值。 
+
+```c
+#include <stdio.h>
+main(){
+	struct student{
+		int number;
+		char name[8];
+		char sex;
+		int age;
+		float c_program;
+	};
+	struct student st1={35013101,"王 迪",'F',20,90},st2={35013112,"杨 光",'M',19,80};
+}
+```
+
+作业：假设学生的基本信息包括学号，姓名，三门课程成绩以及个人平均成绩。输入n个学生的成绩信息，计算并输出平均分最高的学生信息。
+
+```c
+#include "stdio.h"
+struct student //结构体类型定义 
+{ 
+	int num; //学号 
+	char name[10]; //姓名 
+	int computer,english,math; //计算机，英语，数学 
+	double average;	//平均成绩 
+}; 
+main()
+{
+	int i,n;
+	struct student s1,max;
+	printf("请输入n:");
+	scanf("%d",&n);	
+	printf("请输入学生信息（学号、姓名、计算机、英语、数学）:\n");
+	for(i=1;i<=n;i++){
+		printf("NO.%d:",i);
+		scanf("%d %s %d %d %d",&s1.num,s1.name,&s1.computer,&s1.english,&s1.math);
+		s1.average=(s1.math+s1.computer+s1.english)/3.0;
+		if(i==1) //假设序号1的同学平均成绩最高，把它赋值给max 
+			max=s1;
+		if(max.average<s1.average)
+			max=s1; 
+	}	
+	//输出平均分最高的学生信息,包含学号，姓名，平均成绩 
+	printf("平均分最高的学生:\n");
+	printf("num:%d name:%s avg:%.2lf",max.num,max.name,max.average);
+	
+}
+
+```
+
+### 结构体数组
+
+例：计算某班级学生的C语言课程平均成绩？
+
+```c
+#include "stdio.h"
+struct student 
+{ 
+    int number;
+    char name[8]; 
+    char sex; 
+    int age;
+    float c_program; 
+}stu[5]={
+	      {35013101,"王 迪",'F',20,90},
+		  {35013105,"赵晶晶",'F',21,95},
+		  {35013112,"杨 光",'M',19,80},
+		  {35013125,"周腾巍",'M',21,93},
+		  {35013130,"孙益龙",'M',20,100}
+        }; 
+main()
+{
+	int i; 
+    float ave,sum=0; 
+    for(i=0;i<=4;i++) 
+       sum=sum+stu[i].c_program; 
+    ave=sum/5; 
+    printf("ave=%.1f\n",ave);
+}
+
+```
+
+作业：尝试输出某一班级的记录
+
+`printf("%4d\t%s\t%c\t%4d\t%f\n",stu[i].number,stu[i].name,stu[i].sex,stu[i].age,stu[i].c_program);`
+
+结构体变量与函数
+
+作业：设某团体要进购一批书籍，共4种。缩写程序，从键盘输入书名、购买数量、书的单价，计算每种书的总金额和所有要购书的总金额，输出购书清单。
+
+```c
+/*example9_2.c  输出购书清单，函数的参数为结构类型*/
+#include <stdio.h>
+#include <conio.h> //控制台输入输出
+#include <stdlib.h>
+struct BookLib //结构体定义 
+{
+	char name[12];
+	int num;
+	float price;
+	float SumMoney; //单本书的总价 
+};
+void list(struct BookLib StuBook);//函数声明 
+main()
+{
+	struct BookLib Book[4];//结构体变量定义 
+	int i,sum=0;//整型变量定义，sum用来求总数量 
+	float Total=0;//全部书的总价 
+	printf("请输入4本要购进的书籍信息：书名  数量  单价\n");
+	for(i=0;i<4;i++)
+	{
+		scanf("%s",Book[i].name);  /* 输入书名 */
+		scanf("%d%f",&Book[i].num,&Book[i].price);   /* 输入数量和单价 */
+		Total=Total+Book[i].num*Book[i].price;
+		sum+=Book[i].num; //全部书的总价 
+	}
+	printf("\n----------------------------------------------\n");
+	printf("购书清单：\n");
+	printf("书名\t\t\t数量\t单价\t合计\n");
+	for(i=0;i<4;i++)
+		list(Book[i]);    /* 输出购书清单 */ //函数调用 
+	printf("共%d本书，购书金额总计：%.2f\n",sum,Total);//输出购书数量和总价 
+	
+}
+void list(struct BookLib StuBook)//自定义函数 ，参数是结构体 
+{
+	StuBook.SumMoney=StuBook.num*StuBook.price;//单本书的总价 
+	printf("%-24s%d\t%.2f\t%.2f\n",StuBook.name,
+		  StuBook.num,StuBook.price,StuBook.SumMoney); //输出书名 数量 单价 总价 
+}
+```
+
+### 共用体
+
+```c
+#include <stdio.h>
+union data{ //共用体类型定义 
+		char ch; //1
+		int i;  //4
+		float f; //8
+	}; //共用体变量定义 
+
+main(){
+	union data a,b,c;
+	a.ch='a';
+	a.i=10;
+	a.f=289.2;
+	printf("%c \t%d\t %.2f",a.ch,a.i,a.f); 
+	//a 10 289.2
+}
+/*
+结构体与共用体区别：
+1.空间大小不一样，结构体全部相加，共用体是最大成员的空间 
+2.数据可见性， 结构体全部可见，共用体是对最后一个可见
+3.结构体变量可以进行初始化，共用体变量不能进行初始化
+*/ 
+
+```
+
+### 枚举类型
+
+```c
+#include <stdio.h>
+main(){
+	enum weekday{sun,mon,tue,wed,thu,fri,sat}a,b,c; 
+	//a=0;  //枚举元素是常量，不需要双引号，也不需要单引号，不是变量 
+	a=(enum weekday)0;
+	b=mon;
+	c=tue; //不能把数据直接赋值给枚举变量 
+	printf("sun=%d,mon=%d,tue=%d",a,b,c);
+	
+}
+```
+
+### 类型定义符
+
+```c
+#include <stdio.h>
+main(){
+	//类型定义符 typedef 
+	int a,b;
+	typedef int INT;
+	INT c,d;
+	
+	char name[10];
+	
+	typedef char NAME[20]; 
+	NAME a100,a2,a3; //char a100[20],a2[20],a3[20]
+	
+	typedef struct stu{
+		char name[10];
+		int age;
+		char sex; 
+	}STU; //STU是别名 
+	STU b1,b2; //struct stu b1,b2		
+}
+```
+
+### 链表
+
+#### 分配内存函数       
+
+格式：
+
+(类型说明符*)malloc(size)
+
+pc=(char *)malloc(5);  //返回空间的首地址
+
+#### 释放内存函数
+
+free(void*ptr); 
+
+#### 链表
+
+定义：
+
+可在第一个结点的指针域内存入第二个结点的首地址，在第二个结点的指针域内又存放第三个结点的首地址，如此串连下去直到最后一个结点。（空间不连续） 
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+main(){
+struct stu 
+{  
+    int number; 
+    float c_program; 
+    struct stu *next; //自引用 指针类型 
+}; 
+
+	struct stu *pf;//结构体指针变量定义，指针类型 
+	//pf->number=10;
+	pf=(struct stu*)malloc(sizeof(struct stu));// 分配内存函数
+	(*pf).number=10; //成员引用 
+	pf->c_program=12.1;
+	pf->next;
+	
+}
+```
+
+
+
+例：（单链表）编写程序，创建一个链表，该链表可以存放从键盘输入的任意长度的字符串，以按下回车键作为输入的结束。统计输入的字符个数并将其字符串输出。
+
+```c
+/* example9_7.c   创建字符串链表并将其输出 */
+#include <stdlib.h>
+#include <stdio.h>
+struct string
+{
+   char ch;
+   struct string *nextPtr;
+};
+struct string *creat(struct string *h);
+void print_string(struct string *h);
+int num=0;
+main()
+{
+   struct string *head;                 	/*定义表头指针*/
+   head=NULL;                     			/*创建一个空表*/
+   printf("请输入一行字符（输入回车时程序结束）:\n");
+   head=creat(head);                			/*调用函数创建链表*/
+   print_string(head);                 			/*调用函数打印链表内容*/
+   printf("\n输入的字符个数为：%d\n",num);
+}
+struct string *creat(struct string *h)
+{
+   struct string *p1,*p2;
+   p1=p2=(struct string*)malloc(sizeof(struct string)); 	/*申请新结点*/
+   if(p2!=NULL)
+   {
+      scanf("%c",&p2->ch); 	/*输入结点的值*/
+      p2->nextPtr=NULL;    	/*新结点指针成员的值赋为空*/
+   }
+   while(p2->ch!='\n')
+   {
+      num++;       			/*字符个数加1 */
+      if(h==NULL)
+        h=p2;       		/*若为空表，接入表头*/
+      else
+        p1->nextPtr=p2; 	/*若为非空表，接入表尾*/
+      p1=p2;
+      p2=(struct string*)malloc(sizeof(struct string));	/*申请下一个新结点*/
+      if(p2!=NULL)
+      {
+        scanf("%c",&p2->ch);	/*输入结点的值*/
+         p2->nextPtr=NULL;
+      }
+   }
+   return h;
+}
+void print_string(struct string *h)
+{
+   struct string *temp;
+   temp=h;                	/*获取链表的头指针*/
+   while(temp!=NULL)
+   {
+        printf("%-2c",temp->ch);  /*输出链表结点的值*/
+        temp=temp->nextPtr;       /*移到下一个结点*/
+   } 
+}
+
+```
+
+#### 链表案例（公交线路站点信息）
+
+编写程序，用链表的结构建立一条公交线路的站点信息，从键盘依次输入从起点到终点的各站站名，以单个“#”字符作为输入结束，统计站的数量并输出这些站点。
+
+```c
+/* example9_8.c   创建公交线路站名链表并将其输出 */
+#include <stdlib.h>
+#include <stdio.h>
+#include <conio.h>
+struct station
+{
+   char name[20];
+   struct station *nextSta;
+};
+struct station *creat_sta(struct station *h);
+void print_sta(struct station *h);
+int num=0;
+main()
+{
+    struct station *head;
+    head=NULL;
+    printf("请输入站名:\n");
+    head=creat_sta(head);
+    printf("---------------------------\n");
+    printf("共有%d个站点:\n",num);
+    print_sta(head);
+}
+struct station *creat_sta(struct station *h)
+{
+   struct station *p1,*p2;
+   p1=p2=(struct station*)malloc(sizeof(struct station));
+   if(p2!=NULL)
+   {
+       scanf("%s",&p2->name);
+       p2->nextSta=NULL;
+   }
+   while(p2->name[0]!='#')
+   {
+        num++;
+        if(h==NULL)
+           h=p2;
+        else
+           p1->nextSta=p2;
+        p1=p2;
+        p2=(struct station*)malloc(sizeof(struct station));
+        if(p2!=NULL)
+        {
+        scanf("%s",&p2->name);
+           p2->nextSta=NULL;
+        }
+   }
+   return h;
+}
+void print_sta(struct station *h)
+{
+   struct station *temp;
+   temp=h;           
+   while(temp!=NULL)
+   {
+      printf("%-s, ",temp->name);  
+      temp=temp->nextSta;       
+   }
+}
+
+```
+
+从键盘输入一个要删除的站点名，并将删除后的站点依次输出
+
+```c
+/* example9_9.c   删除链表中的一个结点并将结果输出 */
+#include <stdlib.h>
+#include <stdio.h>
+#include <conio.h>
+#include <string.h>
+struct station
+{
+   char name[8];
+   struct station *nextSta;
+};
+struct station *creat_sta(struct station *h);
+void print_sta(struct station *h);
+struct station *del_sta(struct station *h,char *str);
+int num=0;
+main()
+{
+   struct station *head;
+   char name[50],*del_stas=name;
+   head=NULL;
+   printf("请输入站名:\n");
+   head=creat_sta(head);  /* 建立链表 */
+   printf("---------------------------\n");
+   printf("站点数为：%d\n",num);
+   print_sta(head);      /* 输出链表中的站点信息 */
+   printf("\n请输入要删除的站名:\n");
+   scanf("%s",name);
+   head=del_sta(head,del_stas);  /* 删除链表中的一个站点 */
+   printf("---------------------------\n");
+   printf("新的站点为：\n");
+   print_sta(head);  /* 输出删除站点后链表中的站点信息 */
+   printf("\n");
+}
+/* 建立由各站点组成的链表 */
+struct station *creat_sta(struct station *h)
+{
+   struct station *p1,*p2;
+   p1=p2=(struct station*)malloc(sizeof(struct station));
+   if(p2!=NULL)
+   {
+      scanf("%s",&p2->name);
+      p2->nextSta=NULL;
+   }
+   while(p2->name[0]!='#')
+   {
+      num++;
+      if(h==NULL)
+         h=p2;
+      else
+         p1->nextSta=p2;
+      p1=p2;
+      p2=(struct station*)malloc(sizeof(struct station));
+      if(p2!=NULL)
+      {
+      scanf("%s",&p2->name);
+          p2->nextSta=NULL;
+      }
+   }
+   return h;
+}
+/* 输出链表中的信息 */
+void print_sta(struct station *h)
+{
+   struct station *temp;
+   temp=h;           		/*获取链表的头指针*/
+   while(temp!=NULL)
+   {
+      printf("%-8s",temp->name);  		/*输出链表结点的值*/
+      temp=temp->nextSta;       		/*移到下一个结点*/
+   }
+}
+/* 修改链表中指针的指向，删除的站点名为str所指的字符串*/
+struct station *del_sta(struct station *h,char *str)
+{
+   struct station *p1,*p2;
+   p1=h;
+   if(p1==NULL)
+   {
+     printf("The list is null\n");
+     return h;
+   }
+   p2=p1->nextSta;
+   if(!strcmp(p1->name,str))
+   {
+     h=p2;
+     return h;
+   }
+   while(p2!=NULL)
+   {
+     if(!strcmp(p2->name,str))
+     {
+       p1->nextSta=p2->nextSta;
+       return h;
+     }
+     else
+     {
+       p1=p2;
+       p2=p2->nextSta;
+     }
+   }
+   return h;
+}
+```
+
+键盘输入一个要加入的站点名，并将加入后的站点依次输出
+
+```c
+/*example9_10.c   在链表中增加一个结点并将结果输出 */
+#include <stdlib.h>
+#include <stdio.h>
+#include <conio.h>
+#include <string.h>
+struct station
+{
+   char name[8];
+   struct station *nextSta;
+};
+struct station *creat_sta(struct station *h);
+void print_sta(struct station *h);
+struct station *add_sta(struct station *h,char *stradd, char *strafter);
+int num=0;
+main()
+{
+	struct station *head;
+	char add_stas[30],after_stas[30];
+	head=NULL;
+	printf("请输入线路的站点名:\n");
+	head=creat_sta(head); /* 建立站点线路的链表 */
+	printf("---------------------------\n");
+	printf("站点数为：%d\n",num);
+	print_sta(head);     /* 输出站点信息 */
+	printf("\n请输入要增加的站点名：\n");
+	scanf("%s",add_stas);
+	printf("请输入要插在哪个站点的后面：");
+	scanf("%s",after_stas);
+	head=add_sta(head,add_stas,after_stas);
+	printf("---------------------------\n");
+	printf("增加站点后的站名为：\n");
+	print_sta(head);   /* 将新增加的站点插入到链表中 */
+	printf("\n");
+}
+/* 建立站点线路的链表： */
+struct station *creat_sta(struct station *h)
+{
+   struct station *p1,*p2;
+   p1=p2=(struct station*)malloc(sizeof(struct station));
+   if(p2!=NULL)
+   {
+      scanf("%s",&p2->name);
+      p2->nextSta=NULL;
+   }
+   while(p2->name[0]!='#')
+   {
+      num++;
+      if(h==NULL)
+        h=p2;
+      else
+         p1->nextSta=p2;
+      p1=p2;
+      p2=(struct station*)malloc(sizeof(struct station));
+      if(p2!=NULL)
+      {
+     scanf("%s",&p2->name);
+         p2->nextSta=NULL;
+      }
+   }
+   return h;
+}
+/* 输出站点信息： */
+void print_sta(struct station *h)
+{
+   struct station *temp;
+   temp=h;           			/*获取链表的头指针*/
+   while(temp!=NULL)
+   {
+      printf("%-8s",temp->name);  	/*输出链表结点的值*/
+      temp=temp->nextSta;       	/*移到下一个结点*/
+   }
+}
+/* 将stradd所指的站点插入到链表h中的strafter站点的后面 */
+struct station *add_sta(struct station *h,char *stradd, char *strafter)
+{
+   struct station *p1,*p2;
+   p1=h;
+   p2=(struct station*)malloc(sizeof(struct station));
+   strcpy(p2->name,stradd);
+   while(p1!=NULL)
+   {
+      if(!strcmp(p1->name,strafter))
+      {
+        p2->nextSta=p1->nextSta;
+        p1->nextSta=p2;
+        return h;
+      }
+      else
+        p1=p1->nextSta;
+   }
+   return h;
+}
+
+```
+
