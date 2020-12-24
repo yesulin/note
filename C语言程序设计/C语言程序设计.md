@@ -438,6 +438,8 @@ main(){
 
 #### 2.5.4 putchar函数
 
+字符输出函数
+
 ## 第3章 程序的简单算法设计
 
 
@@ -2717,4 +2719,311 @@ struct station *add_sta(struct station *h,char *stradd, char *strafter)
 }
 
 ```
+
+## 文件
+
+概念：
+
+所谓“文件”是指一组相关数据的有序集合。
+
+分类：
+
+编码：二进制文件和ASCII码
+
+用户角度：普通文件和设备文件 
+
+### 文件指针
+
+格式：
+
+FILE *指针变量标识符；
+
+`FILE *fp；    `
+
+注：其中FILE应为大写，它实际上是由系统定义的一种结构，该结构中含有文件名、文件状态和文件当前位置等信息。 
+
+文件打开与关闭
+
+打开
+
+```c
+FILE *fp；
+fp=fopen("file.txt","r"); 
+```
+
+打开方式：
+
+```
+r 只读	w 写   a 追加
+
+t 文本文件 b 二进制文件
+
+\+ 读和写
+```
+
+关闭
+
+关闭格式：
+
+fclose(文件指针)； 
+
+正常完成关闭文件操作时，fclose()返回值为0。如返回非零值则表示有错误发生。 
+
+### 文件的读写操作
+
+#### 字符读函数fgetc(fp)
+
+例:读取文件c1.txt中的内容，并在屏幕上输出。
+
+```c
+#include<stdio.h>
+#include<conio.h>
+#include<stdlib.h>
+void main()
+{
+  FILE *fp; //文件指针 
+  char ch; 
+  if((fp=fopen("c1.txt","rt"))==NULL)    //以只读方式打开文件
+  {
+    printf("\nCannot open file press any key exit!");
+    getch();//从键盘上任意输入一个字符 ，但不在屏幕上显示。该行的作用是等待 
+    exit(1);//退出 
+  }
+  ch=fgetc(fp);                       //循环读取文件里面的每一个字符并显示
+  while(ch!=EOF)                                //判断文件是否结束
+  {
+    putchar(ch); //输出字符                               
+    ch=fgetc(fp);  //循环读取文件里面的每一个字符并显示
+  }
+  fclose(fp);       //关闭                            
+}
+```
+
+例：将当前目录下的某个文本文件的内容输出到屏幕上（文本文件名请通过键盘输入）
+
+```c
+/*example10_2.c  读取文件方法  */
+#include <stdio.h>
+#include <conio.h>
+void main()
+{
+    FILE *fp;
+    char ch,name[30],*filename=name;
+    printf("please imput filename: ");
+    gets(name);
+    fp=fopen(filename,"rt");
+    if (fp==NULL)
+		printf("error\n");
+    else
+		while((ch=fgetc(fp))!=EOF)
+			putchar(ch);
+		fclose(fp);
+}
+```
+
+字符写函数fputc(ch,fp)
+
+```c
+#include<stdio.h>
+#include<conio.h>
+#include<stdlib.h>
+void main()
+{
+FILE *fp;
+char ch;
+if((fp=fopen("c2.txt","wt"))==NULL)
+{   printf("\nCannot open file!");
+    getch();exit(1);
+}
+ch=getchar(); 
+while (ch!='\n') 
+{   fputc(ch,fp); 
+    ch=getchar();
+}
+fclose(fp); 
+                     
+}
+```
+
+作业：从键盘输入一行字符，写入C2文件，再把该文件内容读取到屏幕上。（拓展以追加方式at+）
+
+算法：
+
+1. 头文件，主函数
+2. 建立文件指针，判断打开是否成功
+3. 写入字符到c2文件
+4. rewind(fp);
+5. 读取c2文件到屏幕
+
+```c
+#include<stdio.h>
+#include<conio.h>
+#include<stdlib.h>
+void main()
+{
+  FILE *fp;
+  char ch;
+  if((fp=fopen("c2.txt","wt+"))==NULL)  //以读写方式打开文件
+  {
+    printf("Cannot open file press any key exit!");
+    getch();
+    exit(1);
+  }
+  printf("input a string:\n");
+  ch=getchar();                     //循环从键盘输入字符
+  while (ch!='\n')                  //遇到回车结束
+  {
+    fputc(ch,fp);                   //将该字符写入文件
+    ch=getchar();
+  }
+  rewind(fp);                       //将文件内部指针移至文件首
+  ch=fgetc(fp);
+  while(ch!=EOF)                    //循环读取文件里面每一字符并显示
+  {
+	putchar(ch);
+    ch=fgetc(fp);
+  }
+  printf("\n");
+  fclose(fp);
+}
+```
+
+#### 字符串读函数
+
+```c
+#include<stdio.h>
+#include<conio.h>
+#include<stdlib.h>
+void main()
+{
+  FILE *fp;
+  char str[11];
+  if((fp=fopen("c2.txt","rt"))==NULL)     //以只读方式打开文件
+  {
+    printf("\nCannot open file press any key exit!");
+    getch();
+    exit(1);
+  }
+  fgets(str,3,fp);            //读取字符串，从文件中读取字符，然后按3-1个字符放入数组str
+  printf("\n%s\n",str);        //输出数组内容
+  fclose(fp);
+}
+```
+
+例：用字符串读取方式将某个文本的内容输出到屏幕上，并计算有多行，最后输出其行数。
+
+```c
+/*example10_4.c  从文件按行读取字符串*/
+#include <stdio.h>
+void main()
+{
+    FILE *fp;
+    char w[81],name[30],*filename=name;
+    int lines=0;
+    printf("please imput filename: ");
+    gets(name);
+    fp=fopen(filename,"r");
+    if (fp==NULL)
+       printf("File open error\n");
+    else
+	{
+		while (fgets(w,80,fp)!=NULL)
+		{
+			lines=lines+1;
+			printf("%s",w);
+		}
+		printf("文件的总行数=%d\n",lines);
+		fclose(fp);
+	 }
+}
+```
+
+
+
+#### 字符串写函数
+
+文件c2.txt中追加一个字符串。
+
+```c
+#include<conio.h>
+#include<stdlib.h>
+#include <stdio.h>
+main(){
+FILE *fp;
+char st[20];
+if((fp=fopen("c2.txt","at+"))==NULL)
+{   printf("\nCannot open file!");
+    getch();
+    exit(1);
+}
+gets(st); 
+fputs(st,fp); 
+fclose(fp);
+
+} 
+```
+
+#### 格式化读写函数
+
+例：现有两个文件file1.txt和file2.txt，文件file1.txt中记录的数据为人的姓名，住址。文件file2.txt中记录的是姓名,联系方式。现在将两个文件中同一个姓名的数据合并放到另一个文件file3.txt中。
+
+file1.txt
+
+```
+aa 111
+bb 222
+cc  333
+```
+
+file2.txt
+
+```
+ee 444
+aa 555
+cc 666
+```
+
+```c
+/*example10_10.c  文件操作应用，将两文件的信息合并 */
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+void main()
+{
+    FILE *fp1,*fp2,*fp3;
+    char temp1_1[10],temp1_2[20],temp2_1[10],temp2_2[10];
+    if((fp1=fopen("file1.txt","r"))==NULL)  /* 打开第1个文件 */
+    {
+        printf("文件file1.txt不存在!\n");
+        exit(0);
+    }
+    if((fp2=fopen("file2.txt","r"))==NULL)  /* 打开第2个文件 */
+    {
+        printf("文件file2.txt不存在!\n");
+        exit(0);
+    }
+    if((fp3=fopen("file3.txt","w"))==NULL)  /* 打开第3个文件 */
+    {
+        printf("无法建立文件file3.txt!\n");
+        exit(0);
+    }
+    while(!feof(fp1))
+    {
+        fscanf(fp1,"%s %s",temp1_1,temp1_2);  /* 从第1个文件中读取数据 */
+        do
+        {
+            fscanf(fp2,"%s %s",temp2_1,temp2_2);  /* 从第2个文件中读取数据 */
+            if(strcmp(temp1_1,temp2_1)==0)
+                fprintf(fp3,"%s, %s, %s\n",temp1_1,temp1_2,temp2_2);  
+                                              /* 将数据写入到第3个文件中 */
+        }while(!feof(fp2)); 
+        rewind(fp2); 
+    }
+    fclose(fp1);
+    fclose(fp2);
+    fclose(fp3);
+}
+```
+
+
 
