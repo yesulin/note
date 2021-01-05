@@ -1344,6 +1344,10 @@ nameserver 192.168.1.1
 
 ### 常规设置Apache服务器
 
+启动
+
+`service httpd start`
+
 配置文件地址
 
 `vim /etc/httpd/conf/httpd.conf `
@@ -1403,6 +1407,8 @@ nameserver 192.168.1.1
 
 修改配置文件
 
+禁用 ` 366  #UserDir disabled`
+
 启用` 373    UserDir public_html`
 
 ` 381 <Directory /home/*/public_html>
@@ -1428,7 +1434,7 @@ nameserver 192.168.1.1
 
 ` 411 Alias /test "/virdir"`
 
-### 拒绝访问设置（基本网站）
+### 拒绝访问设置（基本网站）<Directory "/var/www/html">
 
 拒绝IP地址为192.168.1.2访问
 
@@ -1524,6 +1530,10 @@ nameserver 192.168.1.1
 
 `yum install ftp -y`
 
+启动ftp：
+
+`service vsftpd start`
+
 案例1：搭建一台ftp服务器，允许匿名用户上传和下载文件，匿名用户的根目录设置为/var/ftp
 
 配置文件`vim /etc/vsftpd/vsftpd.conf`
@@ -1537,13 +1547,21 @@ nameserver 192.168.1.1
 
 修改目录权限
 
-`ll -l /var/ftp/pub/`
+`ll -ld /var/ftp/pub/`
 
 `chown ftp /var/ftp/pub/`
 
-测试连接
+`chmod 777 /var/ftp/pub/`
+
+关掉安全机制
+
+`setenforce 0`
+
+客户机测试连接
 
 `ftp 192.168.11.1` 
+
+默认用户是"ftp"
 
 案例2：本地用户名和密码登录
 
