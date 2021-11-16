@@ -1,0 +1,10 @@
+d1={}
+d2={'A':123,'B':456}
+d3={'c':'python',12:'ABC'}
+d4=dict()
+d5=dict({'D':'123','E':678})
+print(d1)
+print(d2)
+print(d3)
+print(d4)
+print(d5)
