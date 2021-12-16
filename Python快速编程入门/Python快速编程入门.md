@@ -2545,3 +2545,315 @@ print(add_demo+5)
    - 多态
 7. 运算符重载
 
+## 第九章 异常
+
+###  9.1 异常概述
+
+#### 9.1.1 认识异常
+
+程序开发或运行时可能出现异常，开发人员和运维人员需要辨别程序的异常，明确这些异常是源于程序本身的设计问题，还是由外界环境的变化引起，以便有针对性地处理异常
+
+程序运行出现异常时，若程序中没有设置异常处理功能，解释器会采用系统的默认方式处理异常，即返回异常信息、终止程序。
+
+异常信息中通常包含异常代码所在行号、异常的类型和异常的描述信息。
+
+```python
+>>> 10/0
+Traceback (most recent call last):
+  File "<pyshell#3>", line 1, in <module>
+    10/0
+ZeroDivisionError: division by zero
+```
+
+#### 9.1.2 异常的类型
+
+Python程序运行出错时产生的每个异常类型都对应一个类，程序运行时出现的异常大多继承自Exception类，Exception类又继承了异常类的基类BaseException。
+
+1. NameError
+
+NameError是程序中使用了未定义的变量时会引发的异常。
+
+```python
+>>> print(test)
+Traceback (most recent call last):
+  File "<pyshell#0>", line 1, in <module>
+    print(test)
+NameError: name 'test' is not defined
+```
+
+2. IndexError
+
+IndexError是程序越界访问时会引发的异常。
+
+```python
+>>> List=[1,2,3]
+>>> List[4]
+Traceback (most recent call last):
+  File "<pyshell#1>", line 1, in <module>
+    List[4]
+IndexError: list index out of range
+```
+
+3. AttributeError
+
+AttributeError是使用对象访问不存在的属性时引发的异常。
+
+```python
+>>> class Car:
+	pass
+
+>>> car=Car()
+>>> car.color='黑色'
+>>> car.brand='宝马'
+>>> car.color
+'黑色'
+>>> car.barn
+Traceback (most recent call last):
+  File "<pyshell#18>", line 1, in <module>
+    car.barn
+AttributeError: 'Car' object has no attribute 'barn'
+```
+
+4. FileNotFoundError
+
+FileNotFoundError是未找到指定文件或目录时引发的异常。
+
+```python
+>>> file=open("test.txt")
+Traceback (most recent call last):
+  File "<pyshell#23>", line 1, in <module>
+    file=open("test.txt")
+FileNotFoundError: [Errno 2] No such file or directory: 'test.txt'
+```
+
+5. SyntaxError
+
+SyntaxError是指语法错误
+
+```python
+>>> for i range(10):
+	
+SyntaxError: invalid syntax
+```
+
+### 9.2 异常捕获语句
+
+Python既可以直接通过try-except语句实现简单的异常捕获与处理的功能，也可以将try-except语句与else或finally子句组合实现更强大的异常捕获与处理的功能。
+
+```
+try:
+    可能出错的代码
+except [异常类型 [as error]]:                    # 将捕获到的异常对象赋error
+    捕获异常后的处理代码
+
+```
+
+try-except语句可以捕获与处理程序的单个、多个或全部异常。
+
+```python
+num1=int(input("请输入被除数："))
+num2=int(input("请输入除数："))
+try:
+    print("结果为：",num1/num2)
+except ZeroDivisionError as error:
+    print("出错了",error)
+
+'''
+Traceback (most recent call last):
+  File "<input>", line 1, in <module>
+ZeroDivisionError: division by zero
+'''
+```
+
+#### 9.2.2	 异常结构中的else子句
+
+else子句可以和try-except一起使用，语法格式如下：
+
+```
+try:
+    可能出错的代码
+except [异常类型 [as error]]:                    # 将捕获到的异常对象赋值error
+    捕获异常后的处理代码
+else:
+    未捕获异常后的处理代码
+
+```
+
+```python
+first_num = int(input("请输入被除数："))
+second_num = int(input("请输入除数："))
+try:
+    res = first_num/second_num # 可能出错的代码
+except ZeroDivisionError as error:
+    print('异常原因：',error) # 出错了的处理代码
+else:
+    print("没有错误，正常输出：",res) #没有出错的处理代码
+```
+
+#### 9.2.3	异常结构中的finally子句
+
+finally子句可以和try-except一起使用，语法格式如下：
+
+```python
+try:
+    可能出错的代码
+except [异常类型 [as error]]:                    # 将捕获到的异常对象赋值error
+    捕获异常后的处理代码
+finally:
+    一定执行的代码
+
+```
+
+
+
+```python
+try:
+    file = open('./file.txt', mode='r', encoding='utf-8')
+    print(file.read())
+except FileNotFoundError as error:
+    print(error)
+finally: # 不管有没有异常，一定要执行的代码
+    file.close()
+    print('文件已关闭')
+
+```
+
+### 9.3    抛出异常
+
+Python程序中的异常不仅可以自动触发异常，而且还可以由开发人员使用raise和assert语句主动抛出异常。
+
+#### 9.3.1 使用raise语句抛出异常
+
+raise 异常类				# 格式1：使用异常类名引发指定的异常
+raise 异常类对象				# 格式2：使用异常类的对象引发指定的异常
+raise 					# 格式3： 使用刚出现过的异常重新引发异常
+
+-  异常类
+
+```python
+>>> raise IndexError
+Traceback (most recent call last):
+  File "<pyshell#0>", line 1, in <module>
+    raise IndexError
+IndexError
+```
+
+- 异常类对象
+
+```python
+>>> raise IndexError()
+Traceback (most recent call last):
+  File "<pyshell#1>", line 1, in <module>
+    raise IndexError()
+IndexError
+>>> raise IndexError('下标超出索引')
+Traceback (most recent call last):
+  File "<pyshell#2>", line 1, in <module>
+    raise IndexError('下标超出索引')
+IndexError: 下标超出索引
+```
+
+- 重新引发异常
+
+```python
+>>> try:
+	raise IndexError
+except:
+	raise
+
+Traceback (most recent call last):
+  File "<pyshell#7>", line 2, in <module>
+    raise IndexError
+IndexError
+```
+
+#### 9.3.2 使用assert语句抛出异常
+
+assert语句又称为断言语句(开发调试阶段)，其语法格式如下所示：
+
+assert 表达式[,  异常信息]
+
+表达式值：False  执行异常
+
+​				   True  不执行任何操作
+
+```python
+num_one = int(input("请输入被除数："))
+num_two = int(input("请输入除数："))
+assert num_two != 0, '除数不能为0'  # assert语句判定num_two不等于0
+result = num_one / num_two
+print(num_one, '/', num_two, '=', result)
+```
+
+#### 9.3.3 异常的传递
+
+如果程序中的异常没有被处理，默认情况下会将该异常传递到上一级，如果上一级仍然没有处理异常，那么会继续向上传递，直至异常被处理或程序崩溃
+
+```python
+def get_width():
+    print("get_width开始执行")
+    num=int(input("请输入除数："))
+    width_len=10/num
+    print("get_width执行结束")
+    return width_len
+def calc_area():
+    print('calc_area开始结束')
+    width_len=get_width()
+    print('calc_area执行结束')
+    return width_len*width_len
+def show_area():
+    try:
+        print('show_area开始执行')
+        area_val=calc_area()
+        print(f'正方形的面积是：{area_val}')
+        print('show_area执行结束')
+    except ZeroDivisionError as e:
+        print(f'捕捉到异常：{e}')
+show_area()
+```
+
+#### 9.4    自定义异常
+
+有时我们需要自定义异常类，以满足当前程序的需求。自定义异常的方法比较简单，只需要创建一个继承Exception类或Exception子类的类（类名一般以“Error”为结尾）即可。
+
+```python
+class ShortInputError(Exception):  #自定义异常类n 继承Exception类或Exception子类的类 （类名一般以“Error”为结尾)
+    '''自定义异常类'''
+    def __init__(self, length, atleast):
+        self.length = length  	            # 输入的密码长度
+        self.atleast = atleast  	            # 限制的密码长度
+try:
+    text = input("请输入密码：")
+    if len(text) < 3:
+        raise ShortInputError(len(text), 3)
+except ShortInputError as result: # result相当于对象名
+    print("ShortInputError：输入的长度是%d，长度至少应是 % d" %
+          (result.length, result.atleast)) # 访问实例属性
+else:
+    print("密码设置成功")
+
+```
+
+
+
+## 第10章  Python计算生态
+
+### 10.1    Python计算生态概述
+
+Python计算生态涵盖网络爬虫、数据分析、文本处理、数据可视化、图形用户界面、机器学习、Web开发、网络应用开发、游戏开发、虚拟现实、图形艺术等多个领域，为各个领域的Python使用者提供了极大便利。
+
+
+
+终端
+
+`pip install 库名`
+
+`pip install requests`
+
+`pip install beautifulsoup4`
+
+在控制台下面测试
+
+`import requests`
+
+`from bs4 import BeautifulSoup`
