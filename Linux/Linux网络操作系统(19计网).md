@@ -1067,7 +1067,7 @@ LVM流程：pv物理卷->vg卷组->lv逻辑卷
 #### 远程登录工具
 
 - putty
-- vscode
+- vscode/remote ssh
 - winscp
 - xshell
 
