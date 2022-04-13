@@ -906,7 +906,7 @@ LVM流程：pv物理卷->vg卷组->lv逻辑卷
 
 ## 期中复习
 
-1. 新建与安装Linux操作系统.(见书本p11)
+1. 新建与安装Linux操作系统.(见书本p8)
 2. 管理用户和组
 
 - `useradd -d /home/user02 user02`
