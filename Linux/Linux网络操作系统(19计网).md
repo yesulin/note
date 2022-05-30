@@ -142,14 +142,14 @@ ftp:x:14:50:FTP User:/var/ftp:/sbin/nologin
 
 
 
-### **系统信息类命令** 
+### 系统信息类命令
 
 - dmesg显示系统诊断信息、操作系统版本号、物理内存大小以及其他信息。
 - df命令主要用来查看文件系统的各个分区的占用情况
 - free命令主要用来查看系统内存，虚拟内存的大小及占用情况
 - ldate命令可以用来查看系统当前的日期和时间
 
-### **进程管理类命令** 
+### 进程管理类命令
 
 - ps
 - pidof  用于查询某个指定服务进程的PID值 `pidof sshd `
@@ -163,7 +163,7 @@ ftp:x:14:50:FTP User:/var/ftp:/sbin/nologin
 
 
 
-### **其他常用命令** 
+### 其他常用命令
 
 - clear命令用于清除字符终端屏幕内容
 - uname命令用于显示系统信息 `uname -a`
@@ -906,7 +906,7 @@ LVM流程：pv物理卷->vg卷组->lv逻辑卷
 
 ## 期中复习
 
-1. 新建与安装Linux操作系统.(见书本p8)
+1. 新建与安装Linux操作系统.(见书本p11)
 2. 管理用户和组
 
 - `useradd -d /home/user02 user02`
@@ -940,7 +940,7 @@ LVM流程：pv物理卷->vg卷组->lv逻辑卷
 - `mount /dev/sdb1 /mnt/vfat/`
 - `mount /dev/sdb5 /mnt/ext3/`
 
-## 管理Linux服务器的网络配置
+## 项目六 管理Linux服务器的网络配置
 
 ### 配置主机名
 
@@ -1067,9 +1067,6 @@ LVM流程：pv物理卷->vg卷组->lv逻辑卷
 #### 远程登录工具
 
 - putty
-- vscode/remote ssh
-- winscp
-- xshell
 
 ---
 
@@ -1161,7 +1158,7 @@ HWADDR=00:0C:29:20:31:8B
 
 `service 服务名 start/stop/status/restart/reload`
 
-## vim编程与调式
+## 项目七 vim编程与调式
 
 ### 熟练使用vim编辑器
 
@@ -1185,7 +1182,9 @@ HWADDR=00:0C:29:20:31:8B
   - u 撤消
   - ctrl+r 重做
   - /  查找 n往下查找 N往上查找
+  
 - 插入模式 i
+
 - 命令模式 Esc->shift+:
   - :w 保存
   - :w! 强制保存
@@ -1195,46 +1194,270 @@ HWADDR=00:0C:29:20:31:8B
   
   课堂练习：p140子任务4
 
+### 命令运行的判断依据：;、&&、||
+
+- cmd ; cmd（不考虑命令相关性的连续命令执行）。
+
+`cd test;ll`
+
+- $?（命令回传值）与“&&”或“||”。
+
+  - $$
+
+  `ls /tmp/abc && touch /tmp/abc/hehe`
+
+  `ls: 无法访问/tmp/abc: 没有那个文件或目录`
+
+  `mkdir abc`
+
+  `ls /tmp/abc && touch /tmp/abc/hehe`
+
+  - ||
+
+
+
+
+
 ### 正则表达式
 
 正则表达式就是处理字符串的方法
 
+`dmesg | grep 'IPv6'` 找出内含IPv6的行
+
+- 查找特定字符串
+
 `grep -n 'the' httpd.conf`  查找包含the的行
 
-`grep -in 'the' httpd.conf ` 查找包含the的行 ,忽略大小写
+`grep -vn 'the' sample.txt ` 查找不包含the的行
+
+`grep -in 'the' sample.txt ` 查找包含the的行(不区分开小写)
 
 ` grep -n 'oo' httpd.conf ` 查找所有包含oo的行
+
+- 利用中括号 [] 来搜寻集合字符。不管[]里面有几个字符，都只代表一个
+
+`grep -n 't[ae]st' sample.txt` 
+
+`grep -n '[^g]oo' sample.txt `  不要g开头的且包括oo的单词
+
+`grep -n '[0-9]' sample.txt` 显示包含有数学的行
+
+- 行首与行尾字节^  $
+
+`grep -n '^the' sample.txt ` 显示行首是the
+
+`grep -n '^[a-z]' sample.txt` 行首是小写字母
+
+`grep -n '^[^a-zA-Z]' sample.txt `  行首不要任何大小写字母的
+
+`grep -n '\.$' sample.txt` 行尾不要是句号的，注意转义字符\
+
+`grep -n '\!$' sample.txt `
+
+`grep -n 'y$' sample.txt`
+
+`grep -n '^$' sample.txt `  显示空白行
+
+- 任意一个字符“.”与重复字节“*”
+
+`grep -n 'g..d' sample.txt `
+
+`grep -n 'gooo*' sample.tx`
+
+`grep -n 'goo*g' sample.txt `
+
+`grep -n '[0-9][0-9]*' sample.txt`
+
+- 限定连续RE字符范围{}。
+
+`grep -n 'go\{2,5\}' sample.txt`
+
+`grep -n 'go\{2,5\}g' sample.txt ` 
+
+
+
+
 
 `grep -n '[^R]oo' httpd.conf` 查找包含oo的行,并且排除R开头
 
 `grep -n '[0-9]' httpd.conf` 查找包含数字的行
 
+###  重定向
 
+- 输入重定向 `wc</etc/passwd`
+- 输出重定向 `ls -l  /tmp >dir`  `ls -l /etc >>dir` 追加
 
-## 学习shell script
+### 使用管道
 
-支持数组,循环,条件与逻辑判断
+`rpm -qa | grep samba`
+
+管道符号告诉命令解释程序将左边的命令（在本例中为rpm -qa）的标准输出流连接到右边的命令（在本例中grep samba）的标准输入流。现在命令who的输出不经过临时文件就可以直接送到命令wc中了。
+
+## 项目八 学习shell script
+
+### 了解shell script
+
+什么是shell script（程序化脚本）呢？就字面上的意义，我们将其分为两部分。在“shell”部分，我们在项目七中已经提过了，那是在命令行界面下让我们与系统沟通的一个工具接口。那么“script”是什么？字面上的意义，script是“脚本、剧本”的意思。整句话是说，shell script是针对shell所写的“脚本”。
+
+1. 在shell script撰写中的注意事项
+
+- 命令的执行是从上而下、从左而右进行的。
+- 命令、选项与参数间的多个空格都会被忽略掉。
+- 空 白行也将被忽略掉，并且按“Tab”键所生成的空白同样被视为空格键。
+- 如果读取到一个Enter符号（CR），就尝试开始运行该行（或该串）命令。
+- 如果一行的内容太多，则可以使用“\[Enter]”来延伸至下一行。
+- “#”可作为注解。任何加在 # 后面的数据将全部被视为注解文字而被忽略。
+
+2. 运行shell script程序
+   现在我们假设程序文件名是 /home/dmtsai/shell.sh，那如何运行这个文件呢？很简单，可以有下面几个方法。
+
+- 直接命令下达：shell.sh文件必须要具备可读与可运行（rx）的权限。
+     绝对路径：使用 /home/dmtsai/shell.sh来下达命令。
+     相对路径：假设工作目录在 /home/dmtsai/ ，则使用 ./shell.sh来运行。
+     变量“PATH”功能：将shell.sh放在PATH指定的目录内，例如：~/bin/。
+
+- 以bash程序来运行：通过“bash shell.sh”或“sh shell.sh”来运行。
+
+     
+  
+  编写第一个shell script程序
+  
+  ```shell
+  #!/bin/bash
+  # Program:
+  # This program shows "Hello World!" in your screen.
+  # History:
+  # 2018/08/23	Bobby	First release
+  PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
+  export PATH
+  echo -e "Hello World! \a \n"
+  exit 0
+  
+  ```
+
+### 养成撰写shell script的良好习惯
+
+养成良好习惯是很重要的，但大家在刚开始撰写程序的时候，最容易忽略这部分，认为程序写出来就好了，其他的不重要。其实，如果程序的说明能够更清楚，那么对自己是有很大帮助的。
+建议一定要养成良好的script撰写习惯，在每个script的文件头处包含如下内容。
+
+- script的功能。
+- script的版本信息。
+- script的作者与联络方式。
+- script的版权声明方式。
+- script的History（历史记录）。
+
+### 练习简单的shell script
 
 ```shell
 #!/bin/bash
-echo -e "hello world\a \n"
-exit 0
+# Program:
+#User inputs his first name and last name.  Program shows his full name.
+# History:
+# 2018/08/23	Bobby	First release
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
+export PATH
 
+read -p "Please input your first name: " firstname   	# 提示使用者输入
+read -p "Please input your last name:  " lastname   	# 提示使用者输入
+echo -e "\nYour full name is: $firstname $lastname"  	# 结果由屏幕输出
 ```
 
-sh  ./hello.sh
+随日期变化：利用date进行文件的创建
 
 ```shell
 #!/bin/bash
+#源代码：
+#利用日期进行文件的创建
+#版本信息
+# 2022.5.5  ysl v0.1
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
+export PATH
 
-read -p "input1:" name1
-read -p "input2:" name2
+#  让使用者输入文件名称，并取得fileuser这个变量；
+echo -e "I will use 'touch' command to create 3 files." 	# 纯粹显示信息
+read -p "Please input your filename: "  fileuser         	# 提示用户输入
 
-echo -e "out:" $name1,$name2
-                                  
+#  为了避免用户随意按Enter键，利用变量功能分析文件名是否设置？
+filename=${fileuser:-"filename"}         	# 开始判断是否设置了文件名
+
+#  开始利用date命令来取得所需要的文件名
+date1=$(date --date='2 days ago'  +%Y%m%d)	# 前两天的日期，注意+号前面有个空格
+date2=$(date --date='1 days ago'  +%Y%m%d)	# 前一天的日期，注意+号前面有个空格
+date3=$(date +%Y%m%d)                      	# 今天的日期
+file1=${filename}${date1}                  	# 这三行设置文件名
+file2=${filename}${date2}
+file3=${filename}${date3}
+
+#  创建文件
+touch "$file1"                             
+touch "$file2"
+touch "$file3"
 ```
 
-## 使用GCC
+数值运算：简单的加减乘除
+
+```shell
+#!/bin/bash
+# Program:
+#User inputs 2 integer numbers; program will cross these two numbers.
+# History:
+# 2018/08/23	Bobby	First release
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
+export PATH
+echo -e "You SHOULD input 2 numbers, I will cross them! \n"
+read -p "first number:  " firstnu
+read -p "second number: " secnu
+total=$(($firstnu*$secnu))
+echo -e "\nThe result of $firstnu╳ $secnu is ==> $total"
+```
+
+### 了解脚本的运行方式的差异
+
+- 利用直接运行的方式来运行脚本 `sh sh01.sh`
+- 利用source运行脚本：在父程序中运行 `source sh01.sh `
+
+### 用好判断式 test
+
+`test -e sh01.sh && echo "exist" || echo "not exist"`
+
+### 利用判断符号[]
+
+`name="Bobby Yang"`
+
+`[ "$name" == "Bobby" ] && echo "ok" || echo "no"`
+
+`[ "$name" == "Bobby Yang" ] && echo "ok" || echo "no"`
+
+### 使用条件判断式
+
+####  利用if...then
+
+```shell
+#!/bin/bash
+# Program:
+#       This program shows the user's choice
+# History:
+# 2018/08/25    Bobby   First release
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
+export PATH
+
+read -p "Please input (Y/N): " yn
+
+if [ "$yn" == "Y" ] || [ "$yn" == "y" ]; then
+      echo "OK, continue"
+      exit 0
+fi
+if [ "$yn" == "N" ] || [ "$yn" == "n" ]; then
+      echo "Oh, interrupt!"
+      exit 0
+fi
+echo "I don't know what your choice is" && exit 0
+
+```
+
+
+
+## 项目九 使用GCC
 
 ### 安装gcc
 
@@ -1281,15 +1504,305 @@ int main(){
 
 `gcc -c hello.c `  ===>`hello.o`目标文件===>`gcc -o hello.exe hello.o`执行文件
 
+### 主程序、子程序链接、子程序的编译
 
+```c
+#include <stdio.h>
+//主程序 thanks.c
+int main(void){
+        printf("hello world\n");
+        thanks_2();
+        }                          
+```
 
- ## 配置与管理Samba服务器（网络邻居）
+```c
+#include <stdio.h>
+//子程序thanks_2.c
+void thanks_2(void){
+        printf("Thank you\n");
+        }    
+```
+
+`gcc -c thanks.c thanks_2.c `  生成目标文件 thanks.o  thanks_2.o
+
+`gcc -o thanks.exe thanks.o thanks_2.o` 生成可执行文件 thanks.exe
+
+### 调用外部函数库
+
+```c
+#include <stdio.h>
+int main(void){
+        float value;
+        value=sin(3.14/2);
+        printf("%f\n",value);
+        }     
+```
+
+`gcc sin.c -lm -L/lib -L/usr/lib`  提示错误，默认是启用
+
+ ## 项目十 配置与管理Samba服务器（网络邻居）
 
 
 
 ### 安装samba服务
 
-`yum install samba`
+### Samba应用环境
+
+- 文件和打印机共享：
+
+- 身份验证和权限设置：
+
+- 名称解析：
+
+- 浏览服务：
+
+### 了解SMB协议
+
+SMB（Server Message Block）通信协议可以看作是局域网上共享文件和打印机的一种协议。它是Microsoft和Intel在1987年制定的协议，主要是作为Microsoft网络的通信协议，而Samba则是将SMB协议搬到UNIX系统上来使用。通过“NetBIOS over TCP/IP”，使用Samba不但能与局域网络主机共享资源，也能与全世界的计算机共享资源。因为互联网上千千万万的主机所使用的通信协议就是TCP/IP。SMB是在会话层和表示层以及小部分的应用层的协议，SMB使用了NetBIOS的应用程序接口API。
+另外，它是一个开放性的协议，允许协议扩展，这使得它变得庞大而复杂，大约有65个最上层的作业，而每个作业都超过120个函数。
+
+### 掌握Samba的工作原理
+
+Samba服务功能强大，这与其通信基于SMB协议有关。SMB不仅提供目录和打印机共享，还支持认证、权限设置。在早期，SMB运行于NBT协议（NetBIOS over TCP/IP）上，使用UDP的137、138及TCP的139端口，后期SMB经过开发，可以直接运行于TCP/IP上，没有额外的NBT层，使用TCP的445端口。
+
+- 协议协商。
+- 建立连接
+- 访问共享资源
+- 断开连接
+
+### 配置Samba服务
+
+#### 安装并启动Samba服务
+
+`yum install samba -y`   安装
+
+`rpm -qa |grep samba`  查看安装成功后的信息
+
+```
+samba-4.4.4-9.el7.x86_64
+samba-client-libs-4.4.4-9.el7.x86_64
+samba-common-tools-4.4.4-9.el7.x86_64
+samba-libs-4.4.4-9.el7.x86_64
+samba-common-4.4.4-9.el7.noarch
+samba-common-libs-4.4.4-9.el7.x86_64
+```
+
+`systemctl start smb`  启动
+
+`systemctl enable smb `  开机启动
+
+`systemctl restart smb` 重启
+
+`systemctl stop smb` 停止
+
+`systemctl reload smb` 重新载入
+
+#### 了解Samba服务器配置的工作流程
+
+1. 编辑主配置文件smb.conf，指定需要共享的目录，并为共享目录设置共享权限。
+2. 在smb.conf文件中指定日志文件名称和存放路径。
+3. 设置共享目录的本地系统权限。
+4. 重新加载配置文件或重新启动SMB服务，使配置生效。
+5. 关闭防火墙，同时设置SELinux为允许。
+
+#### 主要配置文件smb.conf
+
+samba的配置文件一般就放在/etc/samba目录中，主配置文件名为smb.conf。
+
+RHEL7的smb.conf配置文件已经简化，只有36行左右。为了更清楚地了解配置文件建议研读smb.smf.example。samba开发组按照功能不同，对smb.conf文件进行了分段划分，条理非常清楚。
+
+```shell
+  1 # See smb.conf.example for a more detailed config file or
+  2 # read the smb.conf manpage.
+  3 # Run 'testparm' to verify the config is correct after
+  4 # you modified it.
+  5 
+  6 [global]
+  7         workgroup = SAMBA  # 工作组 507
+  8         security = user  # 安全验证的方式 共有 4种 
+  9 
+ 10         passdb backend = tdbsam # 定义用户后台的类型
+ 11 
+ 12         printing = cups
+ 13         printcap name = cups
+ 14         load printers = yes   #设置在Samba服务启动时是否共享打印机设备
+ 15         cups options = raw  #打印机的选项
+ 16 
+ 17 [homes]  # 用户主目录
+ 18         comment = Home Directories
+ 19         valid users = %S, %D%w%S
+ 20         browseable = No
+ 21         read only = No
+ 22         inherit acls = Yes
+ 23 
+ 24 [printers] # 共享打印机
+ 25         comment = All Printers
+ 26         path = /var/tmp
+ 27         printable = Yes
+ 28         create mask = 0600
+ 29         browseable = No
+ 30 
+ 31 [print$]
+ 32         comment = Printer Drivers
+ 33         path = /var/lib/samba/drivers
+ 34         write list = root
+ 35         create mask = 0664
+ 36         directory mask = 0775
+ 
+
+
+```
+
+
+
+【例10-1】samba服务器中有个目录为/share，需要发布该目录成为共享目录，定义共享名为ysl，要求：允许浏览、允许只读、允许匿名访问。设置如下所示。
+
+步骤：
+
+`mkdir /share`   在些目录下新建abc.txt 测试文件
+
+`setenforce 0` 关闭安全机制
+
+`firewall-cmd --permanent --add-service=samba` 防火墙放行samba
+
+`firewall-cmd --reload`  重新加载防火墙
+
+`firewall-cmd --list-all` 查看防火墙是否设置成功
+
+`smbpasswd -a yy` 添加yy到samba帐号文件中
+
+配置文件如下:
+
+```shell
+# See smb.conf.example for a more detailed config file or
+# read the smb.conf manpage.
+# Run 'testparm' to verify the config is correct after
+# you modified it.
+
+[global]
+        workgroup = WORKGROUP
+        security = user
+
+        passdb backend = tdbsam
+
+        printing = cups
+        printcap name = cups
+        load printers = yes
+        cups options = raw
+
+[homes]
+        comment = Home Directories
+        valid users = %S, %D%w%S
+        browseable = No
+        read only = No
+        inherit acls = Yes
+
+[printers]
+        comment = All Printers
+        path = /var/tmp
+        printable = Yes
+        create mask = 0600
+        browseable = No
+
+[print$]
+        comment = Printer Drivers
+        path = /var/lib/samba/drivers
+        write list = root
+        create mask = 0664
+        directory mask = 0775
+
+[ysl]
+        comment = my home
+        path = /share
+        public = yes
+        browseable = yes
+        read only = yes
+
+```
+
+设置可以写入
+
+`read only = no`
+
+`systemctl restart smb`
+
+` chmod 777 /share/`
+
+
+
+### 任务3 user服务器实例解析
+
+【例10-5】如果公司有多个部门，因工作需要，就必须分门别类地建立相应部门的目录。要求将销售部的资料存放在Samba服务器的/companydata/sales/目录下集中管理，以便销售人员浏览，并且该目录只允许销售部员工访问。
+需求分析：在/companydata/sales/目录中存放有销售部的重要数据，为了保证其他部门无法查看其内容，我们需要将全局配置中security设置为user安全级别。这样就启用了Samba服务器的身份验证机制。然后在共享目录/companydata/sales下设置valid users字段，配置只允许销售部员工能够访问这个共享目录。
+
+`mkdir /companydata`
+
+`mkdir /companydata/sales`
+
+`touch /companydata/sales/test.share.tar`
+
+`groupadd sales`
+
+`useradd -G sales sale1`
+
+`useradd -G sales sale2`
+
+`useradd test_user1`
+
+`passwd sale1`
+
+`passwd sale2`
+
+`passwd test_user1`
+
+`smbpasswd -a sale1`
+
+`smbpasswd -a sale2`
+
+`vim /etc/samba/smb.conf`
+
+```bash
+[sales]
+        comment=hello
+        path=/companydata/sales
+        writable=yes
+        browseable=yes
+        valid users=@sales
+```
+
+`systemctl start smb`
+
+`setenforce 0`
+
+`firewall-cmd --permanent --add-service=samba`
+
+`firewall-cmd --reload`
+
+`chmod 770 /companydata/sales/ -R`
+
+`chown root.sales /companydata/sales/ -R`
+
+windows客户端测试
+
+`\\192.168.10.1`
+
+linux客户端测试
+
+`yum install samba-client -y`
+
+`smbclient  //192.168.10.1/sales -U sale2%123123`
+
+`mkdir -p /mnt/sambadata`  挂载到本地
+
+`mount -t cifs //192.168.10.1/sales /mnt/sambadata/ -o username=sale1 `挂载到本地
+
+--------
+
+### 以下是基于 Centos 6.4 的配置
+
+------
+
+yum install samba`
 
 ### 启动与停止samba服务
 
@@ -1396,7 +1909,34 @@ smbpasswd -a test1`
 
 `mount -t cifs //172.16.128.193/test1 /mnt/samtest1/ -o username=test1%qwer1234`
 
-## 配置与管理DHCP服务器
+## 项目十一 配置与管理DHCP服务器
+
+```shell
+ddns-update-style none;
+log-facility local7;
+        subnet 192.168.10.0 netmask 255.255.255.0 {
+        range 192.168.10.30 192.168.10.40;
+        option domain-name-servers 192.168.10.1;
+        option domain-name "myDHCP.simile.com";
+        option routers 192.168.10.254;
+        option broadcast-address 192.168.10.255;
+        default-lease-time 600;
+        max-lease-time 7200;
+
+}
+
+host client{
+        hardware ethernet 00:50:56:c0:00:01;
+        fixed-address 192.168.10.35;
+}
+~     
+```
+
+`systemctl restart dhcpd` 重启 dhcpd
+
+
+
+
 
 安装DHCP
 
@@ -1460,7 +2000,159 @@ service network restart 重启网卡
 
 
 
-## 配置与管理ＤＮＳ服务器
+## 项目十二 配置与管理ＤＮＳ服务器
+
+`yum install bind  -y`
+
+### 全局配置文件
+
+`vim /etc/named.conf`
+
+```shell
+options {
+        listen-on port 53 { any; };
+        listen-on-v6 port 53 { ::1; };
+        directory       "/var/named";
+        dump-file       "/var/named/data/cache_dump.db";
+        statistics-file "/var/named/data/named_stats.txt";
+        memstatistics-file "/var/named/data/named_mem_stats.txt";
+        recursing-file  "/var/named/data/named.recursing";
+        secroots-file   "/var/named/data/named.secroots";
+        allow-query     { any; };
+
+        /* 
+         - If you are building an AUTHORITATIVE DNS server, do NOT enable recursion.
+         - If you are building a RECURSIVE (caching) DNS server, you need to enable 
+           recursion. 
+         - If your recursive DNS server has a public IP address, you MUST enable access 
+           control to limit queries to your legitimate users. Failing to do so will
+           cause your server to become part of large scale DNS amplification 
+           attacks. Implementing BCP38 within your network would greatly
+           reduce such attack surface 
+        */
+        recursion yes;
+
+        dnssec-enable yes;
+        dnssec-validation no;
+
+        /* Path to ISC DLV key */
+        bindkeys-file "/etc/named.root.key";
+
+        managed-keys-directory "/var/named/dynamic";
+
+        pid-file "/run/named/named.pid";
+        session-keyfile "/run/named/session.key";
+};
+
+logging {
+        channel default_debug {
+                file "data/named.run";
+                severity dynamic;
+        };
+};
+
+zone "." IN {
+        type hint;
+        file "named.ca";
+};
+
+include "/etc/named.zones";
+include "/etc/named.root.key";
+
+
+```
+
+### 主配置文件
+
+`vim /etc/named.zones`
+
+```shell
+zone "long.com" IN {
+        type master;
+        file "long.com.zone";
+        allow-update {none;};
+};
+
+zone "10.168.192.in-addr.arpa" IN{
+        type master;
+        file "192.168.10.zone";
+        allow-update {none;};
+};
+
+```
+
+ ### 修改bind的区域配置文件
+
+`cd /var/named/`  切换目录
+
+#### 创建long.com.zone 正向区域文件
+
+`cp -p named.localhost long.com.zone`
+
+`vim long.com.zone`
+
+```shell
+$TTL 1D
+@       IN SOA  @ root.long.com. (
+                                        0       ; serial
+                                        1D      ; refresh
+                                        1H      ; retry
+                                        1W      ; expire
+                                        3H )    ; minimum
+@       IN      NS      dns.long.com.
+@       IN      MX      10      mail.long.com.
+
+dns     IN      A       192.168.10.1
+mail    IN      A       192.168.10.2
+slave   IN      A       192.168.10.3
+www     IN      A       192.168.10.4
+ftp     IN      A       192.168.10.20
+web     IN      CNAME   www.long.com.                                             
+
+```
+
+#### 创建192.168.10.zone反向区域文件
+
+`cp -p named.loopback 192.168.10.zone`
+
+`vim 192.168.10.zone`
+
+```shell
+$TTL 1D
+@       IN SOA  @ root.long.com. (
+                                        0       ; serial
+                                        1D      ; refresh
+                                        1H      ; retry
+                                        1W      ; expire
+                                        3H )    ; minimum
+@       IN      NS      dns.long.com.
+@       IN      MX      10 mail.long.com.
+
+1       IN      PTR     dns.long.com.
+2       IN      PTR     mail.long.com.
+3       IN      PTR     slave.long.com.
+4       IN      PTR     www.long.com.
+20      IN      PTR     ftp.long.com.
+
+```
+
+### 防火墙设置和启动DNS
+
+`firewall-cmd --permanent --add-service=dns`
+
+`firewall-cmd --reload `
+
+`firewall-cmd --list-all`
+
+`setenforce 0`
+
+`systemctl start named`
+
+`systemctl status named.service ` 查看配置文件的错误
+
+---
+
+### 以下基于centos 6.4 的DNS配置
 
 安装bind和bind-chroot
 
@@ -1476,7 +2168,7 @@ service network restart 重启网卡
 
 `service named restart`
 
-### named.conf全局配置文件
+#### named.conf全局配置文件
 
 需要启动named服务才能出来全局配置文件
 
@@ -1519,7 +2211,7 @@ include "/etc/named.zones";
 include "/etc/named.root.key";
 ```
 
-### named.zones主配置文件
+#### named.zones主配置文件
 
 创建主配置文件
 
@@ -1541,7 +2233,7 @@ zone "168.192.in-addr.arpa" IN{
 };
 ```
 
-### 创建long.com.zone正向区域文件
+#### 创建long.com.zone正向区域文件
 
 **请注意更换路径**
 
@@ -1577,7 +2269,7 @@ web     IN      CNAME   www.long.com.
 
 
 
-### 创建192.168.zone 反向区域文件
+#### 创建192.168.zone 反向区域文件
 
 `cp -p named.loopback 192.168.zone`
 
@@ -1605,7 +2297,7 @@ $TTL 1D
 
 ```
 
-### 配置linux客户端和测试
+#### 配置linux客户端和测试
 
 `vim /etc/resolv.conf ` 配置客户端DNS服务的IP地址
 
@@ -1620,8 +2312,273 @@ nameserver 192.168.1.1
 2. dig www.long.com
 3. host www.long.com
 
-## 配置与管理Apache服务器
+## 项目十三 配置与管理Apache服务器
+### web服务的概述
 
+### 安装、启动与停止Apache服务
+`yum install httpd -y`
+`systemctl start httpd`
+`firewall-cmd --list-all` 查看防火墙
+`firewall-cmd --permanent --add-service=http` 给http放行
+`firewall-cmd --reload` 重载防火墙
+`setenforce 0` 
+`vim /etc/sysconfig/selinux` 永久禁用安全机制
+```bash
+SELINUX=0
+```
+`systemctl start httpd` 启动apache
+`systemctl enable httpd` 设置开机自动启动
+`firefox http://192.168.1.1`
+`echo "Welcome to myweb">/var/www/html/index.html` 编辑简单测试页面，可以进入文件根目录操作
+
+### 常规设置Apache服务器的实例
+#### 设置文档根目录和首页文件的实例
+`mkdir /home/www`
+`echo "The web's documentroot test">/home/www/myweb.html`
+`cd /etc/httpd/conf`
+`cp -p httpd.conf httpd.conf.bak`
+` vim httpd.conf`
+
+```bash
+119 DocumentRoot "/home/www"  # 文档根目录
+
+124 <Directory "/home/www">   # 文档根目录权限
+125     AllowOverride None
+126     # Allow open access:
+127     Require all granted
+128 </Directory>
+
+163 <IfModule dir_module>
+164     DirectoryIndex index.html myweb.html  # 默认的索引页页面
+165 #
+166 # The following lines prevent .htaccess and .htpasswd files from being 
+167 # viewed by Web clients. 
+168 #
+169 <Files ".ht*">
+```
+`systemctl restart httpd`
+#### 用户个人主页实例
+`useradd long`
+`passwd long`
+`chmod 705 /home/long/`
+`mkdir /home/long/public_html`
+`cd /home/long/public_html/`
+`echo "this is long's web" > index.html`
+`vim /etc/httpd/conf.d/userdir.conf ` 注意文件路径
+```bash
+ 17 #    UserDir disabled
+ 24   UserDir public_html
+```
+`systemctl restart httpd`
+#### 虚拟目录
+`mkdir -p /virdir`
+`echo "this is virtual directory sample" > /virdir/index.html`
+`chmod 705 /virdir/index.html`
+`vim /etc/httpd/conf/httpd.conf`
+```bash
+353 Alias /test "/virdir"
+354 <Directory "/virdir">
+355         AllowOverride None
+356         Require all granted
+357 </Directory>
+```
+`systemctl restart httpd`
+
+### 其他常规设置
+1. 根目录设置
+`31 ServerRoot "/etc/httpd"`
+2. 超时设置
+`Timeout 300`
+3. 客户端连接数限制
+```bash
+359 <IfModule prefork.c>
+360         StartServers    8
+361         MinSpareServers 5
+362         MaxSpareServers 20
+363         ServerLimit     500
+364         MaxClients      500
+365         MaxRequestSperChild     4000
+366 </IfModule>
+```
+4. 设置管理员邮件地址
+` 86 ServerAdmin root@localhost`
+5. 设置主机名称
+` 95 #ServerName www.example.com:80`
+6. 网页编码设置
+`314 AddDefaultCharset UTF-8`  
+7. 目录设置
+`DocumentRoot "/var/www/html"`
+- 允许所有客户端访问
+```bash
+124 <Directory "/var/www/html">
+125         Order allow,deny
+126         Allow from all
+127 </Directory>
+```
+- 拒绝IP地址为192.168.1.2和来自.bad.com域的客户端访问，其他客户端正常访问
+```bash
+124 <Directory "/var/www/html">
+125         Order deny,allow
+126         Deny from 192.168.1.2
+127         Deny from .bad.com
+128 </Directory>
+```
+- 仅允许192.168.1.0/24 网段的客户端访问，但其中192.168.1.3不能访问
+```bash
+124 <Directory "/var/www/html">
+125         Order allow,deny
+126         Allow from 192.168.1.0/24
+127         Deny from 192.168.1.3
+128 </Directory>
+```
+- 除了www.test.com的主机，允许其他所有人访问服务器
+```bash
+124 <Directory "/var/www/html">
+125         Order allow,deny
+126         Allow from all
+127         Deny from www.test.com
+128 </Directory>
+```
+- 只允许10.0.0.0/8 网段的主机访问服务器
+```bash
+124 <Directory "/var/www/html">
+125         Order deny,allow
+126         Allow from all
+127         allow from 10.0.0.0/255.255.0.0
+128 </Directory>
+```
+- 如果对某个文件做权限设置
+```bash
+<Files "/var/www/html/f1.txt">
+        Order allow.deny
+        Allow from all
+</Files>
+```
+### 配置虚拟主机
+#### 配置基于ip地址的虚拟主机
+服务器一张网上共需要两个ip地址
+`192.168.1.1`
+`192.168.1.3`
+`mkdir /var/www/ip1 /var/www/ip3`
+`echo "this is 192.168.1.1's web" >/var/www/ip1/index.html`
+`echo "this is 192.168.1.3's web" >/var/www/ip3/index.html`
+`vim /etc/httpd/conf.d/vhost.conf`
+```bash
+irtualhost 192.168.1.1>
+        DocumentRoot /var/www/ip1
+</Virtualhost>
+
+<Virtualhost 192.168.1.3>
+        DocumentRoot /var/www/ip3
+</Virtualhost>
+```
+`vim /etc/httpd/conf/httpd.conf`
+
+```bash
+<Directory "/var/www/ip1">
+        AllowOverride None
+        Require all granted
+</Directory>
+<Directory "/var/www/ip3">
+        AllowOverride None
+        Require all granted
+</Directory>
+```
+`systemctl restart httpd`
+#### 配置基于端口的虚拟主机
+`mkdir /var/www/8088 /var/www/8089`
+`echo "8088 port's web"> /var/www/8088/index.html`
+`echo "8089 port's web"> /var/www/8089/index.html`
+`vim /etc/httpd/conf/httpd.conf`
+
+```bash
+Listen 8088
+Listen 8089
+<Directory "/var/www">
+        AllowOverride None
+        Require all granted
+</Directory>
+```
+`vim /etc/httpd/conf.d/vhost.conf`
+```bash
+<Virtualhost 192.168.1.1:8088>
+        DocumentRoot /var/www/8088
+</Virtualhost>
+<Virtualhost 192.168.1.1:8089>
+        DocumentRoot /var/www/8089
+</Virtualhost>
+```
+`systemctl restart httpd`
+`firewall-cmd --permanent --zone=public --add-port=8088/tcp` 注意防火墙设置
+`firewall-cmd --permanent --zone=public --add-port=8089/tcp`
+`firewall-cmd --reload `
+`firewall-cmd --list-all`
+
+#### 配置基于域名的虚拟主机
+准备工作
+`vim /ets/named.conf` 允许所有地址和端口进入
+`vim /etc/named.zones`
+```bash
+zone "long.com" IN {
+        type master;
+        file "long.com.zone";
+        allow-update {none;};
+
+};
+
+```
+`cp -p named.localhost long.com.zone`
+`vim long.com.zone`
+```bash
+$TTL 1D
+@       IN SOA  @ rname.invalid. (
+                                        0       ; serial
+                                        1D      ; refresh
+                                        1H      ; retry
+                                        1W      ; expire
+                                        3H )    ; minimum
+
+@       IN      NS      dns.long.com.
+@       IN      MX      10      mail.long.com.
+
+dns     IN      A       192.168.1.1
+www1    IN      A       192.168.1.1
+www2    IN      A       192.168.1.1
+```
+简单测试下DNS
+
+`mkdir /var/www/www1 /var/www/www2`
+`echo "www1.long.com's web"> /var/www/www1/index.html`
+`echo "www2.long.com's web"> /var/www/www2/index.html`
+`vim /etc/httpd/conf/httpd.conf`
+```bash
+Listen 80
+<Directory "/var/www">
+        AllowOverride None
+        Require all granted
+</Directory>
+```
+`vim /etc/httpd/conf.d/vhost.conf`
+```bash
+<Virtualhost 192.168.1.1>
+        DocumentRoot /var/www/www1
+        ServerName www1.long.com
+</Virtualhost>
+<Virtualhost 192.168.1.1>
+        DocumentRoot /var/www/www2
+        ServerName www2.long.com
+</Virtualhost>
+```
+`systemctl restart httpd`
+
+客户机修改
+`vim /etc/hosts`
+```bash
+192.168.1.1 www1.long.com
+192.168.1.1 www2.long.com
+```
+---
+### 基于 Centos 6.4 的配置
 ### 常规设置Apache服务器
 
 启动
@@ -1802,7 +2759,7 @@ nameserver 192.168.1.1
 
 
 
-## 配置与管理FTP服务器
+## 项目十四 配置与管理FTP服务器
 
 安装vsftpd和ftp
 
@@ -1879,6 +2836,201 @@ team2
 3. 测试客户机能否正常访问服务器
 4. 其它知识，如文件权限，新建目录，安装软件等。
 
+### 基于centos 7.3
+
+1. 使用桥接模式安装DHCP和DNS服务
+2. nmtui 设置 ip 地址，子网掩码
+3. `systemctl restart network` 重启网卡
+
+#### 配置DHCP
+
+`yum install dhcp -y`
+`vim /etc/dhcp/dhcpd.conf`
+
+```bash
+ddns-update-style none;
+log-facility local7;
+subnet 192.168.1.0 netmask 255.255.255.01{
+        range 192.168.1.30 192.168.1.150;
+        option domain-name-servers 192.168.1.2;
+        option domain-name "dns.jnrplinux.com";
+        option routers 192.168.1.254;
+        option subnet-mask 255.255.255.0;
+        option broadcast-address 192.168.1.255;
+        default-lease-time 600;
+        max-lease-time 7200;
+}
+
+host webserver{
+        hardware ethernet 00:0c:29:50:c4:4b;
+        fixed-address 192.168.1.10;
+}
+
+host smbserver{
+        hardware ethernet 11:22:33:44:55:66;
+        fixed-address 192.168.1.5;
+}
+
+
+```
+
+`systemctl start dhcpd`
+`systemctl enable dhcpd`
+
+客户机测试
+
+#### 配置DNS
+
+`yum install bind -y`
+
+- 全局配置文件
+
+`vim /etc/named.conf`
+
+```bash
+options {
+        listen-on port 53 { any; };
+        listen-on-v6 port 53 { ::1; };
+        directory       "/var/named";
+        dump-file       "/var/named/data/cache_dump.db";
+        statistics-file "/var/named/data/named_stats.txt";
+        memstatistics-file "/var/named/data/named_mem_stats.txt";
+        recursing-file  "/var/named/data/named.recursing";
+        secroots-file   "/var/named/data/named.secroots";
+        allow-query     { any; };
+
+        /* 
+         - If you are building an AUTHORITATIVE DNS server, do NOT enable recursion.
+         - If you are building a RECURSIVE (caching) DNS server, you need to enable 
+           recursion. 
+         - If your recursive DNS server has a public IP address, you MUST enable access 
+           control to limit queries to your legitimate users. Failing to do so will
+           cause your server to become part of large scale DNS amplification 
+           attacks. Implementing BCP38 within your network would greatly
+           reduce such attack surface 
+        */
+        recursion yes;
+
+        dnssec-enable no;
+        dnssec-validation no;
+
+        /* Path to ISC DLV key */
+        bindkeys-file "/etc/named.root.key";
+
+        managed-keys-directory "/var/named/dynamic";
+
+        pid-file "/run/named/named.pid";
+        session-keyfile "/run/named/session.key";
+};
+
+logging {
+        channel default_debug {
+                file "data/named.run";
+                severity dynamic;
+        };
+};
+
+zone "." IN {
+        type hint;
+        file "named.ca";
+};
+
+include "/etc/named.zones";
+include "/etc/named.root.key";
+
+```
+
+- 主配置文件
+
+`vim /etc/named.zones`
+
+```bash
+zone "jnrplinux.com" IN {
+        type master;
+        file "jnrplinux.com.zone";
+        allow-update {none;};
+};
+
+zone "1.168.192.in-addr.arpa" IN{
+        type master;
+        file "192.168.1.zone";
+        allow-update {none;};
+};
+```
+
+- 正向区域文件
+
+`cd /var/named/`
+`cp -p named.localhost jnrplinux.com.zone`
+`vim jnrplinux.com.zone`
+
+```bash
+$TTL 1D
+@       IN SOA  @ rname.invalid. (
+                                        0       ; serial
+                                        1D      ; refresh
+                                        1H      ; retry
+                                        1W      ; expire
+                                        3H )    ; minimum
+
+@       IN      NS      dns.jnrplinux.com.
+@       IN      MX      10 mail.jnrplinux.com.
+
+dns     IN      A       192.168.1.2
+cw      IN      A       192.168.1.11
+xs      IN      A       192.168.1.12
+jl      IN      A       192.168.1.13
+oa      IN      A       192.168.1.14
+```
+
+- 反向区域文件
+
+`cp -p named.loopback 192.168.1.zone`
+`vim 192.168.1.zone`
+
+```bash
+$TTL 1D
+@       IN SOA  @ rname.invalid. (
+                                        0       ; serial
+                                        1D      ; refresh
+                                        1H      ; retry
+                                        1W      ; expire
+                                        3H )    ; minimum
+
+@       IN      NS      dns.jnrplinux.com.
+@       IN      MX 10   mail.jnrplinux.com.
+
+2       IN      PTR     dns.jnrplinux.com.
+11      IN      PTR     cw.jnrplinux.com.
+12      IN      PTR     xs.jnrplinux.com.
+13      IN      PTR     jl.jnrplinux.com.
+14      IN      PTR     oa.jnrplinux.com.
+                                             
+```
+
+`setenforce 0`
+`firewall-cmd --permanent --add-service=dns`
+`firewall-cmd --reload`
+`systemctl restart named`
+
+客户机测试
+
+`vim /etc/resolv.conf`
+
+```bash
+nameserver 192.168.1.2
+```
+
+三个测试工具
+
+- nslookup  `dns.jnrplinux.com`
+- dig  `dig jl.jnrplinux.com`
+- host `host dns.jnrplinux.com`
+
+
+
+---
+### 基于centos 6.4
 DHCP服务
 
 ```bash
@@ -2004,8 +3156,3 @@ options {
  15 14.1    IN  PTR     oa.jnrplinux.com.
 
 ```
-
-
-
-
-
