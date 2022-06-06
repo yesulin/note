@@ -3042,7 +3042,7 @@ team2
 ### 基于centos 7.3
 
 1. 使用桥接模式安装DHCP和DNS服务
-2. nmtui 设置 ip 地址，子网掩码
+2. nmtui 设置 ip 地址，子网掩码,服务器ip地址：192.168.1.2，客户端自动获取
 3. `systemctl restart network` 重启网卡
 
 #### 配置DHCP
