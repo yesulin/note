@@ -1591,7 +1591,7 @@ samba-common-libs-4.4.4-9.el7.x86_64
 
 `systemctl enable smb `  开机启动
 
-`systemctl restart smb` 重启
+`systemctl restart smb` 重启123123
 
 `systemctl stop smb` 停止
 
@@ -2332,6 +2332,19 @@ SELINUX=0
 `echo "Welcome to myweb">/var/www/html/index.html` 编辑简单测试页面，可以进入文件根目录操作
 
 ### 常规设置Apache服务器的实例
+
+`cd /var/www/html/`
+
+`vim index.html`
+
+```html
+<h1>
+    Welcome....
+</h1>
+```
+
+
+
 #### 设置文档根目录和首页文件的实例
 `mkdir /home/www`
 `echo "The web's documentroot test">/home/www/myweb.html`
@@ -2599,14 +2612,16 @@ Listen 80
 
 最大用户数
 
-` 102 <IfModule prefork.c>
+```bash
+ 102 <IfModule prefork.c>
  103 StartServers       8
  104 MinSpareServers    5
  105 MaxSpareServers   20
  106 ServerLimit      500
  107 MaxClients       500
  108 MaxRequestsPerChild  4000
- 109 </IfModule>`
+ 109 </IfModule>
+ ```
 
 管理员邮箱
 
@@ -2648,7 +2663,8 @@ Listen 80
 
 启用` 373    UserDir public_html`
 
-` 381 <Directory /home/*/public_html>
+```bash
+ 381 <Directory /home/*/public_html>
  382     AllowOverride FileInfo AuthConfig Limit
  383     Options MultiViews Indexes SymLinksIfOwnerMatch IncludesNoExec
  384     <Limit GET POST OPTIONS>
@@ -2659,7 +2675,8 @@ Listen 80
  389         Order deny,allow
  390         Deny from all
  391     </LimitExcept>
- 392 </Directory>`
+ 392 </Directory>
+ ```
 
 ### 虚拟目录
 
@@ -2707,7 +2724,8 @@ Listen 80
 
 配置文件
 
-`1014 <VirtualHost 192.168.11.11>
+```bash
+1014 <VirtualHost 192.168.11.11>
 1015     ServerAdmin webmaster@dummy-host.example.com
 1016     DocumentRoot /var/www/ip1
 1017     ServerName dummy-host.example.com
@@ -2720,7 +2738,8 @@ Listen 80
 1024     ServerName dummy-host.example.com
 1025     ErrorLog logs/dummy-host.example.com-error_log
 1026     CustomLog logs/dummy-host.example.com-access_log common
-1027 </VirtualHost>`
+1027 </VirtualHost>
+```
 
 ### 基于端口号的虚拟主机
 
@@ -2742,7 +2761,8 @@ Listen 80
 
 
 
-`<VirtualHost 192.168.11.1:8080>
+```bash
+<VirtualHost 192.168.11.1:8080>
     ServerAdmin webmaster@dummy-host.example.com
     DocumentRoot /var/www/port8080
     ServerName dummy-host.example.com
@@ -2755,12 +2775,194 @@ Listen 80
     ServerName dummy-host.example.com
     ErrorLog logs/dummy-host.example.com-error_log
     CustomLog logs/dummy-host.example.com-access_log common
-</VirtualHost>`
+</VirtualHost>
+```
 
 
 
 ## 项目十四 配置与管理FTP服务器
+### 相关知识
+### 项目设计与准备
+FTP服务器：192.168.1.1
+Linux客户端：192.168.1.2
+windows客户端：192.168.1.3
+### 项目实施
+#### 安装、启动、防火墙
+`yum install vsftpd -y`
+`yum install ftp -y`
+`systemctl start vsftpd`
+`systemctl enable vsftpd`
+`firewall-cmd --permanent --add-service=ftp`
+`firewall-cmd --reload `
+`setsebool -P ftpd_full_access=on`
+#### 认识vsftpd的配置文件
+`mv /etc/vsftpd/vsftpd.conf /etc/vsftpd/vsftpd.conf.bak`
+`grep -v "#" /etc/vsftpd/vsftpd.conf.bak > /etc/vsftpd/vsftpd.conf`
+`cat /etc/vsftpd/vsftpd.conf -n`
+```bash
+     1	anonymous_enable=YES
+     2	local_enable=YES
+     3	write_enable=YES
+     4	local_umask=022
+     5	dirmessage_enable=YES
+     6	xferlog_enable=YES
+     7	connect_from_port_20=YES
+     8	xferlog_std_format=YES
+     9	listen=NO
+    10	listen_ipv6=YES
+    11	
+    12	pam_service_name=vsftpd
+    13	userlist_enable=YES
+    14	tcp_wrappers=YES
 
+```
+#### 配置匿名用户ftp实例
+`touch /var/ftp/pub/sample.tar`
+`vim /etc/vsftpd/vsftpd.conf`
+```bash
+anonymous_enable=YES
+local_enable=YES
+write_enable=YES
+local_umask=022
+dirmessage_enable=YES
+xferlog_enable=YES
+connect_from_port_20=YES
+xferlog_std_format=YES
+listen=NO
+listen_ipv6=YES
+
+pam_service_name=vsftpd
+userlist_enable=YES
+tcp_wrappers=YES
+
+anon_root=/var/ftp
+anon_upload_enable=YES
+anon_mkdir_write_enable=YES
+anon_other_write_enable=YES
+
+```
+`setenforce 0`
+`systemctl restart vsftpd`
+`ll -ld /var/ftp/pub`
+`chown ftp /var/ftp/pub/`
+```bash
+drwxr-xr-x. 3 ftp root 4096 6月   6 09:35 /var/ftp/pub/
+```
+`systemctl restart vsftpd`
+
+windows客户端：`ftp://192.168.1.1`
+linux客户端：`ftp 192.168.1.1`
+
+#### 配置本地模式的常规FTP服务器案例
+`useradd -s /sbin/nologin team1`
+`useradd -s /sbin/nologin team2`
+`useradd -s /sbin/nologin user1`
+`passwd team1`
+`passwd team2`
+`passwd user1`
+```bash
+anonymous_enable=NO
+local_enable=YES
+local_root=/web/www/html
+chroot_local_user=NO
+chroot_list_enable=YES
+chroot_list_file=/etc/vsftpd/chroot_list
+allow_writeable_chroot=YES
+
+write_enable=YES
+local_umask=022
+dirmessage_enable=YES
+xferlog_enable=YES
+connect_from_port_20=YES
+xferlog_std_format=YES
+listen=NO
+listen_ipv6=YES
+
+pam_service_name=vsftpd
+userlist_enable=YES
+tcp_wrappers=YES
+```
+`vim /etc/vsftpd/chroot_list`
+```bash
+team1
+team2
+```
+`mkdir /web/www/html -p`
+`touch /web/www/html/test.sample`
+`ll -d /web/www/html/`
+```bash
+drwxr-xr-x. 2 root root 4096 6月   6 09:49 /web/www/html/
+```
+`chmod -R o+w /web/www/html/`
+
+linux客户端：`ftp 192.168.1.1`
+分别使用team1、team2和user1测试
+user1是不能锁定在ftp目录下的，很危险
+
+#### 创建vsftp虚拟账号
+##### 创建用户数据库
+创建用户文本文件
+`mkdir /vftp`
+`vim /vftp/vuser.txt`
+```bash
+user2
+12345678
+user3
+12345678
+```
+生成数据库
+`db_load -T -t hash -f /vftp/vuser.txt /vftp/vuser.db`
+修改数据库文件访问权限
+`chmod 700 /vftp/vuser.db `
+
+##### 配置PAM文件 
+`vim /etc/pam.d/vsftpd `
+```bash
+#%PAM-1.0
+#session    optional     pam_keyinit.so    force revoke
+#auth       required    pam_listfile.so item=user sense=deny file=/etc/vsftpd/ftpusers onerr=succeed
+#auth       required    pam_shells.so
+#auth       include     password-auth
+#account    include     password-auth
+#session    required     pam_loginuid.so
+#session    include     password-auth
+auth    required        pam_userdb.so   db=/vftp/vuser
+account required        pam_userdb.so   db=/vftp/vuser
+```
+##### 创建虚拟账户对应系统用户
+`useradd -d /var/ftp/vuser vuser`
+`chown vuser.vuser /var/ftp/vuser`
+`chmod 555 /var/ftp/vuser/`
+`touch /var/ftp/vuser/test.vuser`
+`ll -ld /var/ftp/vuser/`
+```bash
+dr-xr-xr-x. 3 vuser vuser 4096 6月   6 10:30 /var/ftp/vuser/
+```
+##### 修改/etc/vsftpd/vsftpd.conf
+```bash
+anonymous_enable=NO
+anon_upload_enable=NO
+anon_mkdir_write_enable=NO
+anon_other_write_enable=NO
+local_enable=YES
+chroot_local_user=YES
+allow_writeable_chroot=YES
+write_enable=NO
+guest_enable=YES
+guest_username=vuser
+listen=YES
+pam_service_name=vsftpd
+```
+` systemctl restart vsftpd`
+
+linux客户端：`ftp 192.168.1.1`
+只能查看，不能更改目录和新建
+
+#### 补充服务器端vsftp的主被动模式配置
+略
+
+---
+### 基于Centos 6.4
 安装vsftpd和ftp
 
 `yum install vsftpd -y`
@@ -2824,10 +3026,11 @@ Listen 80
 
 `vim /etc/vsftpd/chroot_list`
 
-```
+```bash
 team1
 team2
 ```
+
 
 ## 期末复习
 
