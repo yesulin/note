@@ -2323,6 +2323,7 @@ nameserver 192.168.1.1
 `firewall-cmd --reload` 重载防火墙
 `setenforce 0` 
 `vim /etc/sysconfig/selinux` 永久禁用安全机制
+
 ```bash
 SELINUX=0
 ```
@@ -2476,8 +2477,9 @@ SELINUX=0
 `echo "this is 192.168.1.1's web" >/var/www/ip1/index.html`
 `echo "this is 192.168.1.3's web" >/var/www/ip3/index.html`
 `vim /etc/httpd/conf.d/vhost.conf`
+
 ```bash
-irtualhost 192.168.1.1>
+<Virtualhost 192.168.1.1>
         DocumentRoot /var/www/ip1
 </Virtualhost>
 
@@ -2529,8 +2531,9 @@ Listen 8089
 
 #### 配置基于域名的虚拟主机
 准备工作
-`vim /ets/named.conf` 允许所有地址和端口进入
+`vim /etc/named.conf` 允许所有地址和端口进入
 `vim /etc/named.zones`
+
 ```bash
 zone "long.com" IN {
         type master;
@@ -2540,8 +2543,11 @@ zone "long.com" IN {
 };
 
 ```
+`cd /var/named`
+
 `cp -p named.localhost long.com.zone`
 `vim long.com.zone`
+
 ```bash
 $TTL 1D
 @       IN SOA  @ rname.invalid. (
@@ -2558,7 +2564,7 @@ dns     IN      A       192.168.1.1
 www1    IN      A       192.168.1.1
 www2    IN      A       192.168.1.1
 ```
-简单测试下DNS
+开启防火墙后，简单测试下DNS
 
 `mkdir /var/www/www1 /var/www/www2`
 `echo "www1.long.com's web"> /var/www/www1/index.html`
@@ -2621,7 +2627,7 @@ Listen 80
  107 MaxClients       500
  108 MaxRequestsPerChild  4000
  109 </IfModule>
- ```
+```
 
 管理员邮箱
 
@@ -2676,7 +2682,7 @@ Listen 80
  390         Deny from all
  391     </LimitExcept>
  392 </Directory>
- ```
+```
 
 ### 虚拟目录
 
@@ -2795,10 +2801,12 @@ windows客户端：192.168.1.3
 `firewall-cmd --permanent --add-service=ftp`
 `firewall-cmd --reload `
 `setsebool -P ftpd_full_access=on`
+
 #### 认识vsftpd的配置文件
 `mv /etc/vsftpd/vsftpd.conf /etc/vsftpd/vsftpd.conf.bak`
-`grep -v "#" /etc/vsftpd/vsftpd.conf.bak > /etc/vsftpd/vsftpd.conf`
-`cat /etc/vsftpd/vsftpd.conf -n`
+`grep -v "#" /etc/vsftpd/vsftpd.conf.bak > /etc/vsftpd/vsftpd.conf`  参数-v列出和#不匹配的行
+`cat /etc/vsftpd/vsftpd.conf -n`  查看清洗后的配置文件
+
 ```bash
      1	anonymous_enable=YES
      2	local_enable=YES
@@ -2819,6 +2827,7 @@ windows客户端：192.168.1.3
 #### 配置匿名用户ftp实例
 `touch /var/ftp/pub/sample.tar`
 `vim /etc/vsftpd/vsftpd.conf`
+
 ```bash
 anonymous_enable=YES
 local_enable=YES
@@ -2836,15 +2845,20 @@ userlist_enable=YES
 tcp_wrappers=YES
 
 anon_root=/var/ftp
+#匿名用户的根目录
 anon_upload_enable=YES
+#允许上传
 anon_mkdir_write_enable=YES
+#允许新建目录
 anon_other_write_enable=YES
+#允许重命名，删除
 
 ```
 `setenforce 0`
 `systemctl restart vsftpd`
 `ll -ld /var/ftp/pub`
-`chown ftp /var/ftp/pub/`
+`chown ftp /var/ftp/pub/`  修改目录的权限
+
 ```bash
 drwxr-xr-x. 3 ftp root 4096 6月   6 09:35 /var/ftp/pub/
 ```
@@ -2860,6 +2874,9 @@ linux客户端：`ftp 192.168.1.1`
 `passwd team1`
 `passwd team2`
 `passwd user1`
+
+`vim /etc/vsftpd/vsftpd.conf`
+
 ```bash
 anonymous_enable=NO
 local_enable=YES
@@ -3042,7 +3059,7 @@ team2
 ### 基于centos 7.3
 
 1. 使用桥接模式安装DHCP和DNS服务
-2. nmtui 设置 ip 地址，子网掩码,服务器ip地址：192.168.1.2，客户端自动获取
+2. nmtui 设置 ip 地址，子网掩码
 3. `systemctl restart network` 重启网卡
 
 #### 配置DHCP
