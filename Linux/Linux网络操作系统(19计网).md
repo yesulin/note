@@ -3070,7 +3070,7 @@ team2
 ```bash
 ddns-update-style none;
 log-facility local7;
-subnet 192.168.1.0 netmask 255.255.255.01{
+subnet 192.168.1.0 netmask 255.255.255.0{
         range 192.168.1.30 192.168.1.150;
         option domain-name-servers 192.168.1.2;
         option domain-name "dns.jnrplinux.com";
